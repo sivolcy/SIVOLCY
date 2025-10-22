@@ -28,15 +28,19 @@ conversation_metadata_type_adapter = TypeAdapter(ConversationMetadata)
 @dataclass
 class FileConversationStore(ConversationStore):
     file_store: FileStore
+    user_id: str | None = None  # 添加 user_id 字段
 
     async def save_metadata(self, metadata: ConversationMetadata) -> None:
         json_str = conversation_metadata_type_adapter.dump_json(metadata)
         path = self.get_conversation_metadata_filename(metadata.conversation_id)
+        logger.debug(f"##### save_metadata() into {path}")
         await call_sync_from_async(self.file_store.write, path, json_str)
 
     async def get_metadata(self, conversation_id: str) -> ConversationMetadata:
         path = self.get_conversation_metadata_filename(conversation_id)
+        logger.debug(f"##### get_metadata() from {path}")
         json_str = await call_sync_from_async(self.file_store.read, path)
+        logger.debug(f"##### get_metadata(), json_str={json_str}")
 
         # Validate the JSON
         json_obj = json.loads(json_str)
@@ -46,6 +50,11 @@ class FileConversationStore(ConversationStore):
         # Remove github_user_id if it exists
         if 'github_user_id' in json_obj:
             json_obj.pop('github_user_id')
+
+        if 'user_id' in json_obj:
+            # Fix Input should be a valid string [type=string_type, input_value=1, input_type=int]
+            # caused by conversation_metadata_type_adapter.validate_python(json_obj)
+            json_obj['user_id'] = str(json_obj['user_id'])
 
         result = conversation_metadata_type_adapter.validate_python(json_obj)
         return result
@@ -70,7 +79,15 @@ class FileConversationStore(ConversationStore):
         limit: int = 20,
     ) -> ConversationMetadataResultSet:
         conversations: list[ConversationMetadata] = []
-        metadata_dir = self.get_conversation_metadata_dir()
+
+        # 使用用户特定的目录
+        metadata_dir = ""
+        # metadata_dir = self.get_conversation_metadata_dir()
+        if self.user_id:
+            metadata_dir = f'users/{self.user_id}/conversations'
+        else:
+            metadata_dir = self.get_conversation_metadata_dir()
+
         try:
             conversation_ids = [
                 Path(path).name
@@ -99,7 +116,8 @@ class FileConversationStore(ConversationStore):
         return CONVERSATION_BASE_DIR
 
     def get_conversation_metadata_filename(self, conversation_id: str) -> str:
-        return get_conversation_metadata_filename(conversation_id)
+        # return get_conversation_metadata_filename(conversation_id)
+        return get_conversation_metadata_filename(conversation_id, self.user_id)
 
     @classmethod
     async def get_instance(
@@ -112,7 +130,9 @@ class FileConversationStore(ConversationStore):
             file_store_web_hook_headers=config.file_store_web_hook_headers,
             file_store_web_hook_batch=config.file_store_web_hook_batch,
         )
-        return FileConversationStore(file_store)
+        # return FileConversationStore(file_store)
+        # 传递 user_id
+        return FileConversationStore(file_store, user_id=user_id)
 
 
 def _sort_key(conversation: ConversationMetadata) -> str:

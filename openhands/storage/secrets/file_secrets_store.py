@@ -9,6 +9,7 @@ from openhands.storage.data_models.user_secrets import UserSecrets
 from openhands.storage.files import FileStore
 from openhands.storage.secrets.secrets_store import SecretsStore
 from openhands.utils.async_utils import call_sync_from_async
+from openhands.core.logger import openhands_logger as logger
 
 
 @dataclass
@@ -46,4 +47,8 @@ class FileSecretsStore(SecretsStore):
             file_store_web_hook_headers=config.file_store_web_hook_headers,
             file_store_web_hook_batch=config.file_store_web_hook_batch,
         )
-        return FileSecretsStore(file_store)
+        # return FileSecretsStore(file_store)
+        fss = FileSecretsStore(file_store)
+        fss.path = f'users/{user_id}/secrets.json' if user_id else 'secrets.json'
+        logger.debug(f"##### FileSecretsStore #####, path={fss.path}")
+        return fss

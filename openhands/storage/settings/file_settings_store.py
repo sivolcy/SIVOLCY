@@ -9,6 +9,7 @@ from openhands.storage.data_models.settings import Settings
 from openhands.storage.files import FileStore
 from openhands.storage.settings.settings_store import SettingsStore
 from openhands.utils.async_utils import call_sync_from_async
+from openhands.core.logger import openhands_logger as logger
 
 
 @dataclass
@@ -27,6 +28,7 @@ class FileSettingsStore(SettingsStore):
 
     async def store(self, settings: Settings) -> None:
         json_str = settings.model_dump_json(context={'expose_secrets': True})
+        logger.debug(f"##### FileSettingsStore, store data into {self.path} #####")
         await call_sync_from_async(self.file_store.write, self.path, json_str)
 
     @classmethod
@@ -40,4 +42,9 @@ class FileSettingsStore(SettingsStore):
             file_store_web_hook_headers=config.file_store_web_hook_headers,
             file_store_web_hook_batch=config.file_store_web_hook_batch,
         )
-        return FileSettingsStore(file_store)
+        # return FileSettingsStore(file_store)
+        # 为每个用户使用独立路径
+        fss = FileSettingsStore(file_store)
+        fss.path = f'users/{user_id}/settings.json' if user_id else 'settings.json'
+        logger.debug(f"##### FileSettingsStore #####, path={fss.path}")
+        return fss
