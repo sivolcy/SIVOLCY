@@ -15,6 +15,8 @@ from fastapi import (
 from fastapi.responses import JSONResponse
 
 import openhands.agenthub  # noqa F401 (we import this to get the agents registered)
+from comparegpt.server.auth.auth_middleware import AuthMiddleware
+from comparegpt.server.routes.check_auth import app as check_auth_router
 from openhands.app_server import v1_router
 from openhands.app_server.config import get_app_lifespan_service
 from openhands.integrations.service_types import AuthenticationError
@@ -35,10 +37,6 @@ from openhands.server.routes.trajectory import app as trajectory_router
 from openhands.server.shared import conversation_manager, server_config
 from openhands.server.types import AppMode
 from openhands.version import get_version
-from openhands.core.logger import openhands_logger as logger
-
-from comparegpt.server.routes.check_auth import app as check_auth_router
-from comparegpt.server.auth.auth_middleware import AuthMiddleware
 
 mcp_app = mcp_server.http_app(path='/mcp')
 
