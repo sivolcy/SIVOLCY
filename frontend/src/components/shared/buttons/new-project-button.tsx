@@ -15,11 +15,20 @@ export function NewProjectButton({ disabled = false }: NewProjectButtonProps) {
 
   const startNewProject = t(I18nKey.CONVERSATION$START_NEW);
 
+  // 从 localStorage 获取 token
+  const localToken =
+    typeof window !== "undefined" ? localStorage.getItem("jwt_token") : null;
+
+  // 根据是否存在 token 构建 navLinkTo 的路径
+  // 如果 localToken 存在，则将它作为查询参数附带到根路径
+  const pathToHome = localToken ? `/?token=${localToken}` : "/";
+
   return (
     <TooltipButton
       tooltip={startNewProject}
       ariaLabel={startNewProject}
-      navLinkTo="/"
+      // navLinkTo="/"
+      navLinkTo={pathToHome} // 使用动态构建的路径
       testId="new-project-button"
       disabled={disabled}
     >
