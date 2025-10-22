@@ -36,7 +36,11 @@ class ConversationStore(ABC):
     async def validate_metadata(self, conversation_id: str, user_id: str) -> bool:
         """Validate that conversation belongs to the current user."""
         metadata = await self.get_metadata(conversation_id)
-        logger.debug(f"##### metadata.user_id: {metadata.user_id}, type {type(metadata.user_id)}.  User_id: {user_id}, type {type(user_id)}.  Result: {int(metadata.user_id) == int(user_id)} ")
+        logger.debug(
+            f"##### metadata.user_id: {metadata.user_id}, type {type(metadata.user_id)}. "
+            f"User_id: {user_id}, type {type(user_id)}. "
+            f"Result: {int(metadata.user_id) == int(user_id) if metadata.user_id and user_id else False}"
+        )
         if not metadata.user_id or int(metadata.user_id) != int(user_id):
             return False
         else:
