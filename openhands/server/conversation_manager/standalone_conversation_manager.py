@@ -498,6 +498,7 @@ class StandaloneConversationManager(ConversationManager):
         llm_registry: LLMRegistry,
         event=None,
     ):
+        logger.debug(f"#####  _update_conversation_for_event(): user_id={user_id}, conversation_id={conversation_id}")
         conversation_store = await self._get_conversation_store(user_id)
         conversation = await conversation_store.get_metadata(conversation_id)
         conversation.last_updated_at = datetime.now(timezone.utc)

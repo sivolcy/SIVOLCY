@@ -13,6 +13,7 @@ class LocalFileStore(FileStore):
             root = os.path.expanduser(root)
         self.root = root
         os.makedirs(self.root, exist_ok=True)
+        logger.debug(f'##### LocalFileStore root: {root} #####')
 
     def get_full_path(self, path: str) -> str:
         if path.startswith('/'):
@@ -25,9 +26,11 @@ class LocalFileStore(FileStore):
         mode = 'w' if isinstance(contents, str) else 'wb'
         with open(full_path, mode) as f:
             f.write(contents)
+        logger.debug(f'##### wirte to full_path: {full_path}')
 
     def read(self, path: str) -> str:
         full_path = self.get_full_path(path)
+        logger.debug(f'##### read from full_path: {full_path}')
         with open(full_path, 'r') as f:
             return f.read()
 
@@ -40,6 +43,7 @@ class LocalFileStore(FileStore):
     def delete(self, path: str) -> None:
         try:
             full_path = self.get_full_path(path)
+            logger.debug(f'##### delete full_path: {full_path}')
             if not os.path.exists(full_path):
                 logger.debug(f'Local path does not exist: {full_path}')
                 return

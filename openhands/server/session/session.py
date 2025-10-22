@@ -35,6 +35,7 @@ from openhands.server.session.agent_session import AgentSession
 from openhands.server.session.conversation_init_data import ConversationInitData
 from openhands.storage.data_models.settings import Settings
 from openhands.storage.files import FileStore
+from openhands.core.logger import openhands_logger as logger
 
 
 class WebSession:
@@ -135,25 +136,30 @@ class WebSession:
         initial_message: MessageAction | None,
         replay_json: str | None,
     ) -> None:
+        logger.debug("##### 1. agent_session.event_stream.add_event")
         self.agent_session.event_stream.add_event(
             AgentStateChangedObservation('', AgentState.LOADING),
             EventSource.ENVIRONMENT,
         )
+        logger.debug("##### 2. config.security.confirmation_mode")
         agent_cls = settings.agent or self.config.default_agent
         self.config.security.confirmation_mode = (
             self.config.security.confirmation_mode
             if settings.confirmation_mode is None
             else settings.confirmation_mode
         )
+        logger.debug("##### 3. config.security.security_analyzer")
         self.config.security.security_analyzer = (
             self.config.security.security_analyzer
             if settings.security_analyzer is None
             else settings.security_analyzer
         )
+        logger.debug("##### 4. config.sandbox.base_container_image")
         self.config.sandbox.base_container_image = (
             settings.sandbox_base_container_image
             or self.config.sandbox.base_container_image
         )
+        logger.debug("##### 5. config.sandbox.runtime_container_image")
         self.config.sandbox.runtime_container_image = (
             settings.sandbox_runtime_container_image
             if settings.sandbox_base_container_image
@@ -161,6 +167,7 @@ class WebSession:
             else self.config.sandbox.runtime_container_image
         )
 
+        logger.debug("##### 6. Set Git user configuration if provided in settings")
         # Set Git user configuration if provided in settings
         git_user_name = getattr(settings, 'git_user_name', None)
         if git_user_name is not None:
