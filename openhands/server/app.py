@@ -35,6 +35,10 @@ from openhands.server.routes.trajectory import app as trajectory_router
 from openhands.server.shared import conversation_manager, server_config
 from openhands.server.types import AppMode
 from openhands.version import get_version
+from openhands.core.logger import openhands_logger as logger
+
+from comparegpt.server.routes.check_auth import app as check_auth_router
+from comparegpt.server.auth.auth_middleware import AuthMiddleware
 
 mcp_app = mcp_server.http_app(path='/mcp')
 
@@ -79,6 +83,10 @@ async def authentication_error_handler(request: Request, exc: AuthenticationErro
         content=str(exc),
     )
 
+
+app.middleware('http')(AuthMiddleware())
+app.middleware('https')(AuthMiddleware())
+app.include_router(check_auth_router)
 
 app.include_router(public_api_router)
 app.include_router(files_api_router)

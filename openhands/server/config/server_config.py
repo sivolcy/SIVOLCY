@@ -28,7 +28,8 @@ class ServerConfig(ServerConfigInterface):
     )
     monitoring_listener_class: str = 'openhands.server.monitoring.MonitoringListener'
     user_auth_class: str = (
-        'openhands.server.user_auth.default_user_auth.DefaultUserAuth'
+        # 'openhands.server.user_auth.default_user_auth.DefaultUserAuth'
+        "comparegpt.server.auth.server_config.CustomServerConfig"
     )
     enable_v1: bool = os.getenv('ENABLE_V1') != '0'
 
@@ -56,6 +57,6 @@ def load_server_config() -> ServerConfig:
 
     server_config_cls = get_impl(ServerConfig, config_cls)
     server_config: ServerConfig = server_config_cls()
-    server_config.verify_config()
+    # server_config.verify_config()
 
     return server_config
