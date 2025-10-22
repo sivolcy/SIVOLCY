@@ -45,6 +45,10 @@ async def connect(connection_id: str, environ: dict) -> None:
                 f'Invalid latest_event_id value: {latest_event_id_str}, defaulting to -1'
             )
             latest_event_id = -1
+
+        # 添加: 提取 session_api_key
+        session_api_key = query_params.get('session_api_key', [None])[0]
+
         conversation_id = query_params.get('conversation_id', [None])[0]
         logger.info(
             f'Socket request for conversation {conversation_id} with connection_id {connection_id}'
@@ -63,11 +67,21 @@ async def connect(connection_id: str, environ: dict) -> None:
         if _invalid_session_api_key(query_params):
             raise ConnectionRefusedError('invalid_session_api_key')
 
+        for key, value in environ.items():
+            logger.debug(f'environ: {key}:{value}')
         cookies_str = environ.get('HTTP_COOKIE', '')
         # Get Authorization header from the environment
         # Headers in WSGI/ASGI are prefixed with 'HTTP_' and have dashes replaced with underscores
         authorization_header = environ.get('HTTP_AUTHORIZATION', None)
+
+        # 添加: 如果没有 Authorization header,从 session_api_key 构造
+        if not authorization_header and session_api_key:
+            authorization_header = f'Bearer {session_api_key}'
+
         conversation_validator = create_conversation_validator()
+        logger.debug(
+            f'##### ##### conversation_validator is implemented by {type(conversation_validator)}, authorization_header = {authorization_header} ##### #####'
+        )
         user_id = await conversation_validator.validate(
             conversation_id, cookies_str, authorization_header
         )

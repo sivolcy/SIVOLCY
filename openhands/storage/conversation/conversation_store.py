@@ -9,7 +9,7 @@ from openhands.storage.data_models.conversation_metadata_result_set import (
     ConversationMetadataResultSet,
 )
 from openhands.utils.async_utils import wait_all
-
+from openhands.core.logger import openhands_logger as logger
 
 class ConversationStore(ABC):
     """Abstract base class for conversation metadata storage.
@@ -36,7 +36,8 @@ class ConversationStore(ABC):
     async def validate_metadata(self, conversation_id: str, user_id: str) -> bool:
         """Validate that conversation belongs to the current user."""
         metadata = await self.get_metadata(conversation_id)
-        if not metadata.user_id or metadata.user_id != user_id:
+        logger.debug(f"##### metadata.user_id: {metadata.user_id}, type {type(metadata.user_id)}.  User_id: {user_id}, type {type(user_id)}.  Result: {int(metadata.user_id) == int(user_id)} ")
+        if not metadata.user_id or int(metadata.user_id) != int(user_id):
             return False
         else:
             return True

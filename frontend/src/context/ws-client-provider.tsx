@@ -318,14 +318,20 @@ export function WsClientProvider({
 
     // Set initial status...
     setWebSocketStatus("CONNECTING");
-
+    const token = localStorage.getItem("jwt_token");
     const lastEvent = lastEventRef.current;
     const query = {
       latest_event_id: lastEvent?.id ?? -1,
       conversation_id: conversationId,
       providers_set: providers,
-      session_api_key: conversation.session_api_key, // Have to set here because socketio doesn't support custom headers. :(
+      // session_api_key: conversation.session_api_key, // Have to set here because socketio doesn't support custom headers. :(
+      session_api_key: token, // 添加 token 作为查询参数
     };
+    // ！！临时允许，在调试时使用！！
+    // eslint-disable-next-line no-console
+    console.log(
+      `##### old session_api_key: ${conversation.session_api_key},\n##### new session_api_key: ${token}`,
+    );
 
     let baseUrl: string | null = null;
     let socketPath: string;

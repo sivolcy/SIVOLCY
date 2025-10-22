@@ -139,7 +139,9 @@ class IssueResolver:
         self.workspace_base = self.build_workspace_base(
             self.output_dir, self.issue_type, self.issue_number
         )
-
+        logger.debug(
+            f'##### output_dir={self.output_dir}, workspace_base={self.workspace_base} #####'
+        )
         self.max_iterations = args.max_iterations
 
         self.app_config = self.update_openhands_config(
