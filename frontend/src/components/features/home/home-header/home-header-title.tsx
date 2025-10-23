@@ -6,7 +6,7 @@ export function HomeHeaderTitle() {
 
   return (
     <div className="h-[80px] flex items-center">
-      <Typography.H1>{t("HOME$LETS_START_BUILDING")}</Typography.H1>
+      <Typography.H1 className="text-[#282828]">{t("HOME$LETS_START_BUILDING")}</Typography.H1>
     </div>
   );
 }
