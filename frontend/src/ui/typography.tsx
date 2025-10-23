@@ -7,7 +7,7 @@ const typographyVariants = cva("", {
       h1: "text-[32px] text-white font-bold leading-5",
       h2: "text-xl font-semibold leading-6 -tracking-[0.02em] text-white",
       h3: "text-sm font-semibold text-gray-700",
-      span: "text-sm font-normal text-white leading-5.5",
+      span: "text-sm font-normal text-black leading-5.5",
       codeBlock:
         "font-mono text-sm leading-relaxed text-gray-700 whitespace-pre-wrap",
     },
