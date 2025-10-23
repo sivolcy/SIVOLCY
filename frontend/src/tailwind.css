@@ -13,7 +13,8 @@
 @theme {
   --color-primary: #c9b974;
   --color-logo: #cfb755;
-  --color-base: #66ffff;
+  --color-base: #CCCCCC;
+  --color-sidebar: #66ffff;
   --color-base-secondary: #f8f9fa;
   --color-danger: #e76a5e;
   --color-success: #a5e75e;
@@ -26,6 +27,10 @@
 
 .button-base {
   @apply bg-tertiary border border-neutral-600 rounded-xs;
+}
+
+.bg-sidebar {
+  background-color: var(--color-sidebar);
 }
 
 .skeleton {
