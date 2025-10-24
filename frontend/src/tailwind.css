@@ -113,7 +113,7 @@
 /* Custom styles for contenteditable */
 .chat-input:empty:before {
   content: attr(data-placeholder);
-  color: #a1a1a1;
+  color: #000000;
   pointer-events: none;
   font-size: 16px;
   font-weight: 400;
