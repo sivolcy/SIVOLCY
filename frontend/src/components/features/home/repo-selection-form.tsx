@@ -192,7 +192,7 @@ export function RepositorySelectionForm({
         }}
         className="w-full font-semibold"
       >
-        {!isCreatingConversation && "Launch"}
+        {!isCreatingConversation && t("SETTINGS$TITLE")}
         {isCreatingConversation && t("HOME$LOADING")}
       </BrandButton>
     </div>
