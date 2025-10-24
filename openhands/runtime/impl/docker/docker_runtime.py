@@ -133,6 +133,7 @@ class DockerRuntime(ActionExecutionClient):
 
         self.base_container_image = self.config.sandbox.base_container_image
         self.runtime_container_image = self.config.sandbox.runtime_container_image
+        self.sid = sid
         self.container_name = CONTAINER_NAME_PREFIX + sid
         self.container: Container | None = None
         self.main_module = main_module
@@ -294,7 +295,7 @@ class DockerRuntime(ActionExecutionClient):
                     if 'overlay' in mount_mode:
                         continue
 
-                    volumes[host_path] = {
+                    volumes[os.path.join(host_path, self.sid)] = {
                         'bind': container_path,
                         'mode': mount_mode,
                     }
@@ -311,7 +312,7 @@ class DockerRuntime(ActionExecutionClient):
 
             # e.g. result would be: {"/home/user/openhands/workspace": {'bind': "/workspace", 'mode': 'rw'}}
             # Add os.path.abspath() here so that relative paths can be used when workspace_mount_path is configured in config.toml
-            volumes[os.path.abspath(self.config.workspace_mount_path)] = {
+            volumes[os.path.join(os.path.abspath(self.config.workspace_mount_path), self.sid)] = {
                 'bind': self.config.workspace_mount_path_in_sandbox,
                 'mode': mount_mode,
             }
