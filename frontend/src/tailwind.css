@@ -14,15 +14,15 @@
   --color-primary: #3399ff;
   --color-logo: #cfb755;
   --color-base: #FFFFFF;
-  --color-sidebar: #000000;
-  --color-base-secondary: #f8f9fa;
+  --color-sidebar: #FFFFFF;
+  --color-base-secondary: #FFFFFF;
   --color-danger: #e76a5e;
   --color-success: #a5e75e;
-  --color-basic: #6c757d;
-  --color-tertiary: #e9ecef;
-  --color-tertiary-light: #495057;
-  --color-content: #212529;
-  --color-content-2: #343a40;
+  --color-basic: #000000;
+  --color-tertiary: #FFFFFF;
+  --color-tertiary-light: #000000;
+  --color-content: #000000;
+  --color-content-2: #000000;
 }
 
 .button-base {

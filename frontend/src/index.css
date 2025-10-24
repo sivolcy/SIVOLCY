@@ -3,17 +3,17 @@
 
 :root {
   --bg-dark: #ffffff;
-  --bg-light: #f8f9fa;
+  --bg-light: #ffffff;
   --bg-input: #ffffff;
-  --bg-workspace: #f8f9fa;
-  --border: #dee2e6;
-  --text-editor-base: #6c757d;
-  --text-editor-active: #495057;
-  --bg-editor-sidebar: #f8f9fa;
-  --bg-editor-active: #e9ecef;
-  --border-editor-sidebar: #dee2e6;
+  --bg-workspace: #ffffff;
+  --border: #000000;
+  --text-editor-base: #000000;
+  --text-editor-active: #000000;
+  --bg-editor-sidebar: #ffffff;
+  --bg-editor-active: #ffffff;
+  --border-editor-sidebar: #000000;
   background-color: var(--base) !important;
-  --bg-neutral-muted: #6c757d33;
+  --bg-neutral-muted: #00000033;
 }
 
 body {
@@ -36,10 +36,10 @@ code {
   margin: 0;
   font-size: 85%;
   white-space: break-spaces;
-  background-color: #f8f9fa;
+  background-color: #ffffff;
   border-radius: 4px;
-  color: #495057;
-  border: 1px solid #dee2e6;
+  color: #000000;
+  border: 1px solid #000000;
   letter-spacing: -0.2px;
 }
 
