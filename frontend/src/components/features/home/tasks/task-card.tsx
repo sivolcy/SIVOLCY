@@ -80,7 +80,7 @@ export function TaskCard({ task }: TaskCardProps) {
             {getTaskTypeMap(t)[task.task_type]}
           </span>
           <span
-            className="text-xs text-[#A3A3A3] leading-4 font-normal max-w-70 truncate"
+            className="text-xs text-black leading-4 font-normal max-w-70 truncate"
             title={task.title}
           >
             {task.title}

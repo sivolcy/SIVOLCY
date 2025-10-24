@@ -22,7 +22,7 @@ export function TaskListSection({ taskList }: TaskListSectionProps) {
           {taskList.length === 1 ? "item" : "items"})
         </Typography.H3>
       </div>
-      <div className="p-3 bg-gray-100 rounded-md overflow-auto text-gray-700 max-h-[400px] shadow-inner">
+      <div className="p-3 bg-gray-100 rounded-md overflow-auto text-black max-h-[400px] shadow-inner">
         <div className="space-y-3">
           {taskList.map((task, index) => (
             <TaskItem key={task.id} task={task} index={index} />

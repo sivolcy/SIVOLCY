@@ -12,10 +12,10 @@ export function ToolParameters({ parameters }: ToolParametersProps) {
 
   return (
     <div className="mt-2">
-      <Typography.Text className="text-sm font-semibold text-gray-700">
+      <Typography.Text className="text-sm font-semibold text-black">
         {t("SYSTEM_MESSAGE_MODAL$PARAMETERS")}
       </Typography.Text>
-      <div className="text-sm mt-2 p-3 bg-gray-100 rounded-md overflow-auto text-gray-700 max-h-[400px] shadow-inner">
+      <div className="text-sm mt-2 p-3 bg-gray-100 rounded-md overflow-auto text-black max-h-[400px] shadow-inner">
         <ReactJsonView name={false} src={parameters} theme={JSON_VIEW_THEME} />
       </div>
     </div>

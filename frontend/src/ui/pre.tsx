@@ -21,7 +21,7 @@ const preVariants = cva("whitespace-pre-wrap", {
     },
     textColor: {
       default: "",
-      light: "text-gray-700",
+      light: "text-black",
     },
     padding: {
       default: "",

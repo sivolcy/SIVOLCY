@@ -77,7 +77,7 @@ export function LaunchMicroagentModal({
             </button>
           </div>
 
-          <Typography.Text className="text-sm text-[#A3A3A3] font-normal leading-5">
+          <Typography.Text className="text-sm text-black font-normal leading-5">
             {t("MICROAGENT$DEFINITION")}
           </Typography.Text>
 

@@ -24,7 +24,7 @@ export function UploadedFile({
           <span
             className={cn(
               "text-sm font-normal leading-5 flex-1 max-w-[136px] truncate",
-              isLoading ? "max-w-[108px] text-gray-600" : "text-black",
+              isLoading ? "max-w-[108px] text-black" : "text-black",
             )}
           >
             {file.name}
@@ -32,7 +32,7 @@ export function UploadedFile({
         </div>
         <div className="flex items-center gap-2">
           <FileIcon width={12} height={12} color="#000000" />
-          <span className="text-[9px] font-normal leading-5 text-gray-600">
+          <span className="text-[9px] font-normal leading-5 text-black">
             {fileExtension}
           </span>
         </div>
