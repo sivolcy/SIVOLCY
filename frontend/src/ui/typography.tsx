@@ -5,7 +5,7 @@ const typographyVariants = cva("", {
   variants: {
     variant: {
       h1: "text-[32px] !text-black font-bold leading-5",
-      h2: "text-xl font-semibold leading-6 -tracking-[0.02em] text-white",
+      h2: "text-xl font-semibold leading-6 -tracking-[0.02em] text-black",
       h3: "text-sm font-semibold text-black",
       span: "text-sm font-normal text-black leading-5.5",
       codeBlock:

@@ -26,7 +26,7 @@ export function SettingsModal({ onClose, settings }: SettingsModalProps) {
         {aiConfigOptions.error && (
           <p className="text-danger text-xs">{aiConfigOptions.error.message}</p>
         )}
-        <span className="text-5 leading-6 font-semibold -tracking-[0.2px] text-white">
+        <span className="text-5 leading-6 font-semibold -tracking-[0.2px] text-black">
           {t(I18nKey.AI_SETTINGS$TITLE)}
         </span>
         <HelpLink
@@ -37,7 +37,7 @@ export function SettingsModal({ onClose, settings }: SettingsModalProps) {
           suffix="."
           size="settings"
           linkColor="white"
-          suffixClassName="text-white"
+          suffixClassName="text-black"
         />
 
         {aiConfigOptions.isLoading && (

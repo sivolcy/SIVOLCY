@@ -26,7 +26,7 @@ export function NewProjectButton({ disabled = false }: NewProjectButtonProps) {
       <PlusIcon
         width={24}
         height={24}
-        color={pathname === "/" ? "#ffffff" : "#B1B9D3"}
+        color={pathname === "/" ? "#000000" : "#B1B9D3"}
       />
     </TooltipButton>
   );
