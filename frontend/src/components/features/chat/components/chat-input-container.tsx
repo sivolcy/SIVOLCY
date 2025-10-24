@@ -49,7 +49,7 @@ export function ChatInputContainer({
   return (
     <div
       ref={chatContainerRef}
-      className="bg-white box-border content-stretch flex flex-col items-start justify-center p-4 pt-3 relative rounded-[15px] w-full border border-gray-400"
+      className="bg-[#EAEAEA] box-border content-stretch flex flex-col items-start justify-center p-4 pt-3 relative rounded-[15px] w-full border border-gray-400"
       onDragOver={(e) => onDragOver(e, disabled)}
       onDragLeave={(e) => onDragLeave(e, disabled)}
       onDrop={(e) => onDrop(e, disabled)}

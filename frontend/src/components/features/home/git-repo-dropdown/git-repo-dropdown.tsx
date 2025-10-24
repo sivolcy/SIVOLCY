@@ -260,7 +260,7 @@ export function GitRepoDropdown({
         href={githubHref}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center w-full px-2 py-2 text-sm text-white hover:bg-[#5C5D62] rounded-md transition-colors duration-150 font-normal"
+        className="flex items-center w-full px-2 py-2 text-sm text-black hover:bg-[#5C5D62] hover:text-white rounded-md transition-colors duration-150 font-normal"
         onMouseDown={(e) => {
           // Prevent downshift from closing the menu when clicking the sticky footer
           e.preventDefault();
@@ -307,7 +307,7 @@ export function GitRepoDropdown({
 
     return (
       <div>
-        <Typography.Text className="text-xs text-[#FAFAFA] font-semibold leading-4 pl-2">
+        <Typography.Text className="text-xs text-black font-semibold leading-4 pl-2">
           {t(I18nKey.COMMON$MOST_RECENT)}
         </Typography.Text>
       </div>

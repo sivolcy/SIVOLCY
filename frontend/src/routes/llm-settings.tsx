@@ -679,7 +679,7 @@ function LlmSettingsScreen() {
                 <TooltipButton
                   tooltip={t(I18nKey.SETTINGS$CONFIRMATION_MODE_TOOLTIP)}
                   ariaLabel={t(I18nKey.SETTINGS$CONFIRMATION_MODE)}
-                  className="text-[#9099AC] hover:text-white cursor-help"
+                  className="text-[#9099AC] hover:text-black cursor-help"
                 >
                   <QuestionCircleIcon width={16} height={16} />
                 </TooltipButton>
