@@ -27,33 +27,33 @@
       <stop offset="100%" style="stop-color:#03A9F4"/>
     </linearGradient>
   </defs>
-  
+
   <g transform="translate(160,80)">
     <!-- Spiral arms - more accurate to the provided image -->
     <!-- Green spiral arms (top-left) -->
     <path d="M -50 -10 A 60 60 0 0 1 -10 -50" stroke="url(#greenGrad)" stroke-width="8" fill="none" stroke-linecap="round"/>
     <path d="M -35 -5 A 40 40 0 0 1 -5 -35" stroke="#8BC34A" stroke-width="6" fill="none" stroke-linecap="round"/>
-    
+
     <!-- Yellow spiral arms (top-right) -->
     <path d="M 10 -50 A 60 60 0 0 1 50 -10" stroke="url(#yellowGrad)" stroke-width="8" fill="none" stroke-linecap="round"/>
     <path d="M 5 -35 A 40 40 0 0 1 35 -5" stroke="#FDD835" stroke-width="6" fill="none" stroke-linecap="round"/>
-    
+
     <!-- Orange spiral arms (right) -->
     <path d="M 50 10 A 60 60 0 0 1 10 50" stroke="url(#orangeGrad)" stroke-width="8" fill="none" stroke-linecap="round"/>
     <path d="M 35 5 A 40 40 0 0 1 5 35" stroke="#FF7043" stroke-width="6" fill="none" stroke-linecap="round"/>
-    
+
     <!-- Red spiral arms (bottom) -->
     <path d="M -10 50 A 60 60 0 0 1 -50 10" stroke="url(#redGrad)" stroke-width="8" fill="none" stroke-linecap="round"/>
     <path d="M -5 35 A 40 40 0 0 1 -35 5" stroke="#EC407A" stroke-width="6" fill="none" stroke-linecap="round"/>
-    
+
     <!-- Purple spiral arms (bottom-left) -->
     <path d="M -50 -10 A 60 60 0 0 0 -10 50" stroke="url(#purpleGrad)" stroke-width="7" fill="none" stroke-linecap="round"/>
     <path d="M -35 -5 A 40 40 0 0 0 -5 35" stroke="#7E57C2" stroke-width="5" fill="none" stroke-linecap="round"/>
-    
+
     <!-- Blue spiral arms (left to top) -->
     <path d="M 10 50 A 60 60 0 0 0 50 -10" stroke="url(#blueGrad)" stroke-width="7" fill="none" stroke-linecap="round"/>
     <path d="M 5 35 A 40 40 0 0 0 35 -5" stroke="#42A5F5" stroke-width="5" fill="none" stroke-linecap="round"/>
-    
+
     <!-- Earth in center - more detailed -->
     <circle cx="0" cy="0" r="22" fill="#1565C0"/>
     <!-- Earth continents - more realistic -->
@@ -61,11 +61,11 @@
     <path d="M -10 3 Q -3 0 3 3 Q 10 6 8 12 Q 0 15 -6 12 Q -10 9 -10 3 Z" fill="#388E3C"/>
     <ellipse cx="6" cy="-6" rx="6" ry="4" fill="#1B5E20"/>
     <ellipse cx="-8" cy="2" rx="4" ry="3" fill="#1B5E20"/>
-    
+
     <!-- Highlight on earth -->
     <ellipse cx="-8" cy="-8" rx="3" ry="2" fill="#64B5F6" opacity="0.6"/>
   </g>
-  
+
   <!-- CompareGPT text - better positioned and sized -->
   <text x="160" y="175" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="600" fill="#424242">CompareGPT</text>
 </svg>
