@@ -21,12 +21,12 @@ export function SettingsModal({ onClose, settings }: SettingsModalProps) {
     <ModalBackdrop>
       <div
         data-testid="ai-config-modal"
-        className="bg-[#25272D] min-w-full max-w-[475px] m-4 p-6 rounded-xl flex flex-col gap-[17px] border border-tertiary api-configuration-modal"
+        className="bg-white min-w-full max-w-[475px] m-4 p-6 rounded-xl flex flex-col gap-[17px] border border-tertiary api-configuration-modal"
       >
         {aiConfigOptions.error && (
           <p className="text-danger text-xs">{aiConfigOptions.error.message}</p>
         )}
-        <span className="text-5 leading-6 font-semibold -tracking-[0.2px]">
+        <span className="text-5 leading-6 font-semibold -tracking-[0.2px] text-white">
           {t(I18nKey.AI_SETTINGS$TITLE)}
         </span>
         <HelpLink
