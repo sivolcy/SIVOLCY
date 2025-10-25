@@ -38,11 +38,15 @@ class JwtUserAuth(UserAuth):
         return SecretStr(self.token)
 
     async def get_provider_tokens(self):
-        logger.info(f"get_provider_tokens(): None")
+        logger.info(f"get_provider_tokens(): entry")
+        secrets_store = await self.get_secrets_store()
+        user_secrets = await secrets_store.load()
+        if user_secrets:
+            return user_secrets.provider_tokens
         return None
 
     async def get_user_settings_store(self):
-        logger.info(f"get_user_settings_store():  entry")
+        logger.info(f"get_user_settings_store(): entry")
         # return FileSettingsStore(self.user_id)
         settings_store = self._settings_store
         if settings_store:
