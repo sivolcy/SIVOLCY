@@ -91,7 +91,7 @@ def display_welcome(conversation_id: UUID, resume: bool = False) -> None:
     """Display welcome message."""
     clear()
     display_banner(str(conversation_id), resume)
-    print_formatted_text(HTML("<gold>Let's start building!</gold>"))
+    print_formatted_text(HTML("<black>Let's start building!</black>"))
     print_formatted_text(
         HTML(
             '<green>What do you want to build? <grey>Type /help for help</grey></green>'

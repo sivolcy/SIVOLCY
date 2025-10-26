@@ -82,7 +82,7 @@ export function SettingsNavigation({
             >
               {icon}
               <div className="flex items-center gap-1.5 min-w-0 flex-1">
-                <Typography.Text className="text-[#A3A3A3] whitespace-nowrap">
+                <Typography.Text className="text-black whitespace-nowrap">
                   {t(text as I18nKey)}
                 </Typography.Text>
                 {isSaas && to === "/settings" && <ProPill />}

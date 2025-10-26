@@ -29,9 +29,10 @@ export function ConversationPanelButton({
         width={24}
         height={24}
         className={cn(
-          "cursor-pointer",
-          isOpen ? "text-white" : "text-[#B1B9D3]",
+          "cursor-pointer text-black",
           disabled && "opacity-50",
+          // Always black regardless of isOpen state
+          isOpen && "",
         )}
       />
     </TooltipButton>

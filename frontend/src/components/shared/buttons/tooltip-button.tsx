@@ -66,7 +66,7 @@ export function TooltipButton({
         className={({ isActive }) =>
           cn(
             "hover:opacity-80",
-            isActive ? "text-white" : "text-[#9099AC]",
+            isActive ? "text-black" : "text-[#9099AC]",
             className,
           )
         }

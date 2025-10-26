@@ -260,7 +260,7 @@ export function GitRepoDropdown({
         href={githubHref}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center w-full px-2 py-2 text-sm text-white hover:bg-[#5C5D62] rounded-md transition-colors duration-150 font-normal"
+        className="flex items-center w-full px-2 py-2 text-sm text-black hover:bg-[#5C5D62] hover:text-white rounded-md transition-colors duration-150 font-normal"
         onMouseDown={(e) => {
           // Prevent downshift from closing the menu when clicking the sticky footer
           e.preventDefault();
@@ -307,7 +307,7 @@ export function GitRepoDropdown({
 
     return (
       <div>
-        <Typography.Text className="text-xs text-[#FAFAFA] font-semibold leading-4 pl-2">
+        <Typography.Text className="text-xs text-black font-semibold leading-4 pl-2">
           {t(I18nKey.COMMON$MOST_RECENT)}
         </Typography.Text>
       </div>
@@ -321,7 +321,7 @@ export function GitRepoDropdown({
           {isLoadingState ? (
             <div className="animate-spin h-4 w-4 border-2 border-blue-500 border-t-transparent rounded-full" />
           ) : (
-            <RepoIcon width={16} height={16} />
+            <RepoIcon width={16} height={16} className="text-black" />
           )}
         </div>
         <input
@@ -330,10 +330,10 @@ export function GitRepoDropdown({
             disabled,
             placeholder,
             className: cn(
-              "w-full px-3 py-2 border border-[#727987] rounded-sm shadow-none h-[42px] min-h-[42px] max-h-[42px]",
-              "bg-[#454545] text-[#A3A3A3] placeholder:text-[#A3A3A3]",
-              "focus:outline-none focus:ring-0 focus:border-[#727987]",
-              "disabled:bg-[#363636] disabled:cursor-not-allowed disabled:opacity-60",
+              "w-full px-3 py-2 border border-gray-400 rounded-sm shadow-none h-[42px] min-h-[42px] max-h-[42px]",
+              "bg-white text-black placeholder:text-gray-500",
+              "focus:outline-none focus:ring-0 focus:border-gray-400",
+              "disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60",
               "pl-7 pr-16 text-sm font-normal leading-5", // Space for clear and toggle buttons
             ),
           })}

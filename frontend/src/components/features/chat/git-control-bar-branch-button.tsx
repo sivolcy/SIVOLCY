@@ -34,14 +34,14 @@ export function GitControlBarBranchButton({
         "group flex flex-row items-center justify-between gap-2 pl-2.5 pr-2.5 py-1 rounded-[100px] w-fit flex-shrink-0 max-w-[200px] truncate relative",
         hasBranch
           ? "border border-[#525252] bg-transparent hover:border-[#454545] cursor-pointer"
-          : "border border-[rgba(71,74,84,0.50)] bg-transparent cursor-not-allowed min-w-[108px]",
+          : "border border-gray-400 bg-white cursor-not-allowed min-w-[108px]",
       )}
     >
       <div className="w-3 h-3 flex items-center justify-center flex-shrink-0">
-        <BranchIcon width={12} height={12} color="white" />
+        <BranchIcon width={12} height={12} color="black" />
       </div>
       <div
-        className="font-normal text-white text-sm leading-5 truncate"
+        className={cn("font-normal text-sm leading-5 truncate", "text-black")}
         title={buttonText}
       >
         {buttonText}

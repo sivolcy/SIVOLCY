@@ -12,12 +12,12 @@ export const ASSET_FILE_TYPES = [
 
 export const JSON_VIEW_THEME = {
   base00: "transparent", // background
-  base01: "#f8f9fa", // lighter background
-  base02: "#e9ecef", // selection background
-  base03: "#6c757d", // comments, invisibles
-  base04: "#495057", // dark foreground
-  base05: "#212529", // default foreground
-  base06: "#343a40", // light foreground
+  base01: "#ffffff", // lighter background
+  base02: "#ffffff", // selection background
+  base03: "#000000", // comments, invisibles
+  base04: "#000000", // dark foreground
+  base05: "#000000", // default foreground
+  base06: "#000000", // light foreground
   base07: "#ffffff", // light background
   base08: "#dc3545", // variables, red
   base09: "#fd7e14", // integers, orange
@@ -43,7 +43,8 @@ export const PRODUCT_URL = {
 };
 
 export const SETTINGS_FORM = {
-  LABEL_CLASSNAME: "text-[11px] font-medium leading-4 tracking-[0.11px]",
+  LABEL_CLASSNAME:
+    "text-[11px] font-medium leading-4 tracking-[0.11px] text-black",
 };
 
 export const GIT_PROVIDER_OPTIONS = [

@@ -19,13 +19,13 @@ export function SuggestionItem({ suggestion, onClick }: SuggestionItemProps) {
   const itemIcon = useMemo(() => {
     switch (suggestion.label) {
       case "INCREASE_TEST_COVERAGE":
-        return <TachometerFastIcon width={24} height={24} color="#fff" />;
+        return <TachometerFastIcon width={24} height={24} color="#000" />;
       case "AUTO_MERGE_PRS":
-        return <PrStatusIcon width={19} height={20} color="#fff" />;
+        return <PrStatusIcon width={19} height={20} color="#000" />;
       case "FIX_README":
-        return <DocumentIcon width={24} height={24} color="#fff" />;
+        return <DocumentIcon width={24} height={24} color="#000" />;
       case "CLEAN_DEPENDENCIES":
-        return <WaterIcon width={24} height={24} color="#fff" />;
+        return <WaterIcon width={24} height={24} color="#000" />;
       default:
         return null;
     }
@@ -34,13 +34,13 @@ export function SuggestionItem({ suggestion, onClick }: SuggestionItemProps) {
   return (
     <button
       type="button"
-      className="list-none border border-[#525252] rounded-[15px] hover:bg-tertiary flex-1 flex items-center justify-center cursor-pointer gap-[10px] h-[55px] px-4"
+      className="list-none border border-gray-300 rounded-[15px] bg-white hover:bg-gray-100 flex-1 flex items-center justify-center cursor-pointer gap-[10px] h-[55px] px-4"
       onClick={() => onClick(suggestion.value)}
     >
       {itemIcon}
       <span
         data-testid="suggestion"
-        className="text-[15px] font-normal leading-5 text-[#DEDFE0] text-center cursor-pointer"
+        className="text-[15px] font-normal leading-5 text-black text-center cursor-pointer"
       >
         {t(suggestion.label)}
       </span>

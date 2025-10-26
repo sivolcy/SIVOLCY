@@ -33,7 +33,7 @@ export function MCPObservationContent({ event }: MCPObservationContentProps) {
               {t("MCP_OBSERVATION$ARGUMENTS")}
             </h3>
           </div>
-          <div className="p-3 bg-gray-100 rounded-md overflow-auto text-gray-700 max-h-[200px] shadow-inner">
+          <div className="p-3 bg-gray-100 rounded-md overflow-auto text-black max-h-[200px] shadow-inner">
             <ReactJsonView
               name={false}
               src={event.extras.arguments}
@@ -52,7 +52,7 @@ export function MCPObservationContent({ event }: MCPObservationContentProps) {
             {t("MCP_OBSERVATION$OUTPUT")}
           </h3>
         </div>
-        <div className="p-3 bg-gray-100 rounded-md overflow-auto text-gray-700 max-h-[300px] shadow-inner">
+        <div className="p-3 bg-gray-100 rounded-md overflow-auto text-black max-h-[300px] shadow-inner">
           {typeof outputData === "object" && outputData !== null ? (
             <ReactJsonView
               name={false}

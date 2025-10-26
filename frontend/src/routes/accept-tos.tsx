@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { I18nKey } from "#/i18n/declaration";
-import OpenHandsLogo from "#/assets/branding/openhands-logo.svg?react";
+import CompareGPTLogo from "#/assets/branding/comparegpt-logo.svg?react";
 import { TOSCheckbox } from "#/components/features/waitlist/tos-checkbox";
 import { BrandButton } from "#/components/features/settings/brand-button";
 import { handleCaptureConsent } from "#/utils/handle-capture-consent";
@@ -60,7 +60,7 @@ export default function AcceptTOS() {
   return (
     <ModalBackdrop>
       <div className="border border-tertiary p-8 rounded-lg max-w-md w-full flex flex-col gap-6 items-center bg-base-secondary">
-        <OpenHandsLogo width={68} height={46} />
+        <CompareGPTLogo width={68} height={46} />
 
         <div className="flex flex-col gap-2 w-full items-center text-center">
           <h1 className="text-2xl font-bold">

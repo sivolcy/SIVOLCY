@@ -192,7 +192,7 @@ export function GitBranchDropdown({
           {isLoadingState ? (
             <div className="animate-spin h-4 w-4 border-2 border-blue-500 border-t-transparent rounded-full" />
           ) : (
-            <BranchIcon width={16} height={16} />
+            <BranchIcon width={16} height={16} className="text-black" />
           )}
         </div>
         <input
@@ -201,10 +201,10 @@ export function GitBranchDropdown({
             disabled: disabled || !repository,
             placeholder,
             className: cn(
-              "w-full px-3 py-2 border border-[#727987] rounded-sm shadow-none h-[42px] min-h-[42px] max-h-[42px]",
-              "bg-[#454545] text-[#A3A3A3] placeholder:text-[#A3A3A3]",
-              "focus:outline-none focus:ring-0 focus:border-[#727987]",
-              "disabled:bg-[#363636] disabled:cursor-not-allowed disabled:opacity-60",
+              "w-full px-3 py-2 border border-gray-400 rounded-sm shadow-none h-[42px] min-h-[42px] max-h-[42px]",
+              "bg-white text-black placeholder:text-gray-500",
+              "focus:outline-none focus:ring-0 focus:border-gray-400",
+              "disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60",
               "pl-7 pr-16 text-sm font-normal leading-5", // Space for clear and toggle buttons
             ),
           })}

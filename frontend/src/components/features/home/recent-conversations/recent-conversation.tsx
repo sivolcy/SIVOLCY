@@ -29,11 +29,11 @@ export function RecentConversation({ conversation }: RecentConversationProps) {
           <ConversationStatusIndicator
             conversationStatus={conversation.status}
           />
-          <span className="text-xs text-white leading-6 font-normal">
+          <span className="text-xs text-black leading-6 font-normal">
             {conversation.title}
           </span>
         </div>
-        <div className="flex items-center justify-between text-xs text-[#A3A3A3] leading-4 font-normal">
+        <div className="flex items-center justify-between text-xs text-black leading-4 font-normal">
           <div className="flex items-center gap-3">
             {hasRepository ? (
               <div className="flex items-center gap-2">
@@ -49,7 +49,7 @@ export function RecentConversation({ conversation }: RecentConversationProps) {
               </div>
             ) : (
               <div className="flex items-center gap-1">
-                <RepoForkedIcon width={12} height={12} color="#A3A3A3" />
+                <RepoForkedIcon width={12} height={12} color="#000000" />
                 <span className="max-w-[124px] truncate">
                   {t(I18nKey.COMMON$NO_REPOSITORY)}
                 </span>
@@ -57,7 +57,7 @@ export function RecentConversation({ conversation }: RecentConversationProps) {
             )}
             {hasRepository ? (
               <div className="flex items-center gap-1">
-                <CodeBranchIcon width={12} height={12} color="#A3A3A3" />
+                <CodeBranchIcon width={12} height={12} color="#000000" />
                 <span
                   className="max-w-[124px] truncate"
                   title={conversation.selected_branch || ""}
