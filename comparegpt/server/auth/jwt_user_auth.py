@@ -166,7 +166,7 @@ class JwtUserAuth(UserAuth):
         # 因为通常需要从请求中获取 token
         # 但为了满足抽象类要求,可以这样实现:
         logger.info("get_for_user(): cls(user_id=user_id, token='', email=None)")
-        return cls(user_id=user_id, token='', email='', user_name='', role='', api_key='', expiration=None)
+        return cls(user_id=user_id, token='', email='', user_name='', role='', api_key='', expiration=0)
 
     @classmethod
     async def get_instance(cls, request: Request) -> UserAuth:
