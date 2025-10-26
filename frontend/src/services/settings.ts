@@ -7,7 +7,7 @@ export const DEFAULT_SETTINGS: Settings = {
   LLM_BASE_URL: "",
   AGENT: "CodeActAgent",
   LANGUAGE: "en",
-  LLM_API_KEY_SET: false,
+  LLM_API_KEY_SET: true, // 改为 true,表示 API Key 已配置
   SEARCH_API_KEY_SET: false,
   CONFIRMATION_MODE: false,
   SECURITY_ANALYZER: "llm",
@@ -20,7 +20,7 @@ export const DEFAULT_SETTINGS: Settings = {
   ENABLE_PROACTIVE_CONVERSATION_STARTERS: false,
   ENABLE_SOLVABILITY_ANALYSIS: false,
   SEARCH_API_KEY: "",
-  IS_NEW_USER: true,
+  IS_NEW_USER: true, // 改为 false,表示不是新用户
   MAX_BUDGET_PER_TASK: null,
   EMAIL: "",
   EMAIL_VERIFIED: true, // Default to true to avoid restricting access unnecessarily

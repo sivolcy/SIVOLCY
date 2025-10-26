@@ -53,9 +53,11 @@ export function Sidebar() {
       displayErrorToast(
         "Something went wrong while fetching settings. Please reload the page.",
       );
-    } else if (config?.APP_MODE === "oss" && settingsError?.status === 404) {
-      setSettingsModalIsOpen(true);
     }
+    // 移除这部分逻辑,不再自动打开设置模态框
+    // else if (config?.APP_MODE === "oss" && settingsError?.status === 404) {
+    //   setSettingsModalIsOpen(true);
+    // }
   }, [
     settingsError?.status,
     settingsError,
