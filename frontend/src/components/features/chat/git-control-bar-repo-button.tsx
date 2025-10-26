@@ -43,7 +43,7 @@ export function GitControlBarRepoButton({
         {hasRepository ? (
           <GitProviderIcon
             gitProvider={gitProvider as Provider}
-            className="w-3 h-3 inline-flex"
+            className="w-3 h-3 inline-flex text-black"
           />
         ) : (
           <RepoForkedIcon width={12} height={12} color="black" />
@@ -52,7 +52,7 @@ export function GitControlBarRepoButton({
       <div
         className={cn(
           "font-normal text-sm leading-5 truncate flex-1 min-w-0",
-          hasRepository ? "text-white" : "text-black",
+          "text-black",
         )}
         title={buttonText}
       >
