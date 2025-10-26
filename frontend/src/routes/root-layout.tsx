@@ -15,7 +15,6 @@ import { useConfig } from "#/hooks/query/use-config";
 import { Sidebar } from "#/components/features/sidebar/sidebar";
 import { AuthModal } from "#/components/features/waitlist/auth-modal";
 import { ReauthModal } from "#/components/features/waitlist/reauth-modal";
-import { AnalyticsConsentFormModal } from "#/components/features/analytics/analytics-consent-form-modal";
 import { useSettings } from "#/hooks/query/use-settings";
 import { useMigrateUserConsent } from "#/hooks/use-migrate-user-consent";
 import { useBalance } from "#/hooks/query/use-balance";
@@ -89,6 +88,7 @@ export default function MainApp() {
   // When on TOS page, we don't use the GitHub auth URL
   const effectiveGitHubAuthUrl = isOnTosPage ? null : gitHubAuthUrl;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [consentFormIsOpen, setConsentFormIsOpen] = React.useState(false);
 
   // Auto-login if login method is stored in local storage
@@ -235,13 +235,14 @@ export default function MainApp() {
         />
       )}
       {renderReAuthModal && <ReauthModal />}
+      {/* 注释掉隐私偏好模态框
       {config.data?.APP_MODE === "oss" && consentFormIsOpen && (
         <AnalyticsConsentFormModal
           onClose={() => {
             setConsentFormIsOpen(false);
           }}
         />
-      )}
+      )} */}
 
       {config.data?.FEATURE_FLAGS.ENABLE_BILLING &&
         config.data?.APP_MODE === "saas" &&
