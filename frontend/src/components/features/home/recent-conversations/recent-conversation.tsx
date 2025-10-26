@@ -29,7 +29,7 @@ export function RecentConversation({ conversation }: RecentConversationProps) {
           <ConversationStatusIndicator
             conversationStatus={conversation.status}
           />
-          <span className="text-xs text-white leading-6 font-normal">
+          <span className="text-xs text-black leading-6 font-normal">
             {conversation.title}
           </span>
         </div>
