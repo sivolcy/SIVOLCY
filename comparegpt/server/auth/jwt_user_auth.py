@@ -4,7 +4,7 @@ import jwt
 
 from openhands.server import shared
 from openhands.core.logger import openhands_logger as logger
-from openhands.server.user_auth.user_auth import UserAuth
+from openhands.server.user_auth.user_auth import UserAuth, AuthType # 确保导入 AuthType
 from openhands.storage.settings.file_settings_store import FileSettingsStore
 from openhands.storage.secrets.file_secrets_store import FileSecretsStore
 from openhands.server.settings import Settings
@@ -20,11 +20,27 @@ class JwtUserAuth(UserAuth):
     _secrets_store: SecretsStore | None = None
     _user_secrets: UserSecrets | None = None
 
-    def __init__(self, user_id: str, token: str, email: str = None):
+    def __init__(self, user_id: str,
+                 token: str,
+                 email: str,
+                 user_name: str,
+                 role: str,
+                 api_key: str,
+                 expiration: int,
+                 ):
         self.user_id = user_id
+        self.user_name = user_name
+        self.role = role
+        self.api_key = api_key
+        self.expiration = expiration
         self.token = token
         self.email = email
         self._settings = None
+        # ======================= MODIFICATION START =======================
+        # 添加 auth_type 属性，以满足 manage_conversations.py 中的检查
+        # 因为 JWT 认证是一种 Bearer token 认证，所以我们将其硬编码为 BEARER
+        self.auth_type = AuthType.BEARER
+        # ======================= MODIFICATION END =======================
 
     async def get_user_id(self) -> str | None:
         logger.info(f"get_user_id(): {self.user_id}")
@@ -69,6 +85,26 @@ class JwtUserAuth(UserAuth):
         settings_store = await self.get_user_settings_store()
         settings = await settings_store.load()
 
+        # 如果没有存储的 settings,创建默认配置
+        if not settings:
+            logger.info(f"No existing settings for user {self.user_id}, creating defaults")
+            settings = Settings(
+                llm_model='gpt-5-mini',  # 或其他默认模型
+                llm_api_key=SecretStr(self.api_key),
+                llm_base_url='https://comparegpt.io/api',
+                agent='CodeActAgent',
+            )
+            # 保存默认配置
+            await settings_store.store(settings)
+            logger.info(f"Default settings saved for user {self.user_id}")
+        else:
+            # 如果存在 settings 但缺少 LLM 配置,更新它们
+            if not settings.llm_api_key:
+                settings.llm_api_key = SecretStr(self.api_key)
+            if not settings.llm_base_url:
+                settings.llm_base_url = 'https://comparegpt.io/api'
+            await settings_store.store(settings)
+
         # Merge config.toml settings with stored settings
         if settings:
             settings = settings.merge_with_config_settings()
@@ -93,6 +129,16 @@ class JwtUserAuth(UserAuth):
         self._secrets_store = secret_store
         logger.info(f"get_secrets_store(): exit")
         return secret_store
+
+    async def get_llm_credentials(self) -> dict[str, str]:
+        """Expose provider/base_url/api_key parsed from JWT for downstream services."""
+        if not self.api_key:
+            raise HTTPException(status_code=401, detail='Missing LLM API key in token')  # 确保所有 LLM 调用都有凭证
+        return {
+            'provider': 'comparegpt',  # provider 固定
+            'base_url': 'https://comparegpt.io/api',  # base URL 固定
+            'api_key': self.api_key,  # 来自 JWT
+        }
 
     async def get_user_secrets(self) -> UserSecrets | None:
         logger.info(f"get_user_secrets(): entry")
@@ -120,7 +166,7 @@ class JwtUserAuth(UserAuth):
         # 因为通常需要从请求中获取 token
         # 但为了满足抽象类要求,可以这样实现:
         logger.info("get_for_user(): cls(user_id=user_id, token='', email=None)")
-        return cls(user_id=user_id, token='', email=None)
+        return cls(user_id=user_id, token='', email='', user_name='', role='', api_key='', expiration=None)
 
     @classmethod
     async def get_instance(cls, request: Request) -> UserAuth:
@@ -164,19 +210,47 @@ class JwtUserAuth(UserAuth):
             # from openhands.server.shared import server_config
             # jwt_secret = server_config.jwt_secret.get_secret_value()
             from openhands.server.shared import config
-            jwt_secret = config.jwt_secret.get_secret_value()
+
+            # 1. 安全地获取 jwt_secret 对象
+            jwt_secret_obj = config.jwt_secret
+
+            # 2. 检查对象是否存在，如果不存在则抛出异常
+            if jwt_secret_obj is None:
+                raise HTTPException(status_code=500, detail="JWT secret is not configured on the server.")
+
+            # 3. 只有在检查通过后，才安全地调用 get_secret_value()
+            jwt_secret = jwt_secret_obj.get_secret_value()
 
             decoded = jwt.decode(token, jwt_secret, algorithms=['HS256'])
 
             user_id = decoded.get('user_id')
             email = decoded.get('email')
+            user_name = decoded.get('user_name')
+            role = decoded.get('role')
+            api_key = decoded.get('api_key')
+            expiration_str = decoded.get('exp')
+            expiration = int(expiration_str) if str(expiration_str).isdigit() else None
 
             if not user_id:
                 logger.info(f"{request.url}: NOT FOUND user_id!!!")
                 raise HTTPException(status_code=401, detail='Invalid token: missing user_id')
 
+            if not api_key:
+                logger.info(f"{request.url}: NOT FOUND api_key!!!")
+                raise HTTPException(status_code=401, detail='Invalid token: missing api_key')
+
+            if not expiration:
+                logger.info(f"{request.url}: NOT FOUND expiration!!!")
+                raise HTTPException(status_code=401, detail='Invalid token: missing expiration')
+
             logger.info(f"{request.url}: create JwtUserAuth.")
-            return cls(user_id=user_id, token=token, email=email)
+            return cls(user_id=user_id,
+                       token=token,
+                       email=email,
+                       user_name=user_name,
+                       role=role,
+                       api_key=api_key,
+                       expiration=expiration)
         except jwt.ExpiredSignatureError:
             raise HTTPException(status_code=401, detail='Token has expired')
         except jwt.InvalidTokenError:

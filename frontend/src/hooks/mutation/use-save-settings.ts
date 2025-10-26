@@ -6,18 +6,21 @@ import { PostSettings } from "#/types/settings";
 import { PostApiSettings } from "#/settings-service/settings.types";
 import { useSettings } from "../query/use-settings";
 
+// 【修改1】重构: saveSettingsMutationFn 移除 llm_base_url 和 llm_api_key 处理
 const saveSettingsMutationFn = async (settings: Partial<PostSettings>) => {
   const apiSettings: Partial<PostApiSettings> = {
-    llm_model: settings.LLM_MODEL,
-    llm_base_url: settings.LLM_BASE_URL,
+    llm_model: settings.LLM_MODEL, // 只发送模型名,不带 provider 前缀
+    // 【修改2】移除: llm_base_url 字段
+    // llm_base_url: settings.LLM_BASE_URL,
     agent: settings.AGENT || DEFAULT_SETTINGS.AGENT,
     language: settings.LANGUAGE || DEFAULT_SETTINGS.LANGUAGE,
     confirmation_mode: settings.CONFIRMATION_MODE,
     security_analyzer: settings.SECURITY_ANALYZER,
-    llm_api_key:
-      settings.llm_api_key === ""
-        ? ""
-        : settings.llm_api_key?.trim() || undefined,
+    // 【修改3】移除: llm_api_key 字段处理
+    // llm_api_key:
+    //   settings.llm_api_key === ""
+    //     ? ""
+    //     : settings.llm_api_key?.trim() || undefined,
     remote_runtime_resource_factor: settings.REMOTE_RUNTIME_RESOURCE_FACTOR,
     enable_default_condenser: settings.ENABLE_DEFAULT_CONDENSER,
     condenser_max_size:

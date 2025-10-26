@@ -29,6 +29,7 @@ from openhands.storage.data_models.conversation_metadata import (
 )
 from openhands.storage.data_models.user_secrets import UserSecrets
 from openhands.utils.conversation_summary import get_default_conversation_title
+from comparegpt.server.auth.jwt_user_auth import JwtUserAuth
 
 
 async def initialize_conversation(
@@ -71,6 +72,7 @@ async def initialize_conversation(
 
 
 async def start_conversation(
+    auth: JwtUserAuth,  # <--- 新增的参数
     user_id: str | None,
     git_provider_tokens: PROVIDER_TOKEN_TYPE | None,
     custom_secrets: CUSTOM_SECRETS_TYPE_WITH_JSON_SCHEMA | None,
@@ -98,30 +100,27 @@ async def start_conversation(
     session_init_args: dict[str, Any] = {}
     if settings:
         session_init_args = {**settings.__dict__, **session_init_args}
-        # We could use litellm.check_valid_key for a more accurate check,
-        # but that would run a tiny inference.
-        model_name = settings.llm_model or ''
-        is_bedrock_model = model_name.startswith('bedrock/')
-        is_lemonade_model = model_name.startswith('lemonade/')
-
-        if (
-            not is_bedrock_model
-            and not is_lemonade_model
-            and (
-                not settings.llm_api_key
-                or settings.llm_api_key.get_secret_value().isspace()
-            )
-        ):
-            logger.warning(f'Missing api key for model {settings.llm_model}')
-            raise LLMAuthenticationError(
-                'Error authenticating with the LLM provider. Please check your API key'
-            )
-        elif is_bedrock_model:
-            logger.info(f'Bedrock model detected ({model_name}), API key not required')
-
     else:
         logger.warning('Settings not present, not starting conversation')
         raise MissingSettingsError('Settings not found')
+
+    # ======================= 核心修改开始 =======================
+    # 1. 从 auth 对象获取 LLM 凭证
+    llm_credentials = await auth.get_llm_credentials()
+
+    # 2. 将正确的凭证和模型信息合并到 session_init_args 中
+    #    这将覆盖掉从 settings 文件中加载的任何过时或不存在的 LLM 配置
+    session_init_args['llm_provider'] = llm_credentials['provider']
+    session_init_args['llm_base_url'] = llm_credentials['base_url']
+    session_init_args['llm_api_key'] = llm_credentials['api_key']
+
+    # 3. 确保 llm_model 存在，如果 settings 中没有，则使用默认值
+    if 'llm_model' not in session_init_args or not session_init_args['llm_model']:
+        session_init_args['llm_model'] = 'gpt-5-mini' # 需求b: 默认模型
+
+    # 4. 移除旧的、错误的API Key检查逻辑
+    #    因为我们现在确信 session_init_args['llm_api_key'] 是正确的
+    # ======================= 核心修改结束 =======================
 
     session_init_args['git_provider_tokens'] = git_provider_tokens
     session_init_args['selected_repository'] = conversation_metadata.selected_repository
@@ -162,6 +161,7 @@ async def start_conversation(
 
 
 async def create_new_conversation(
+    auth: JwtUserAuth, # <--- 新增参数
     user_id: str | None,
     git_provider_tokens: PROVIDER_TOKEN_TYPE | None,
     custom_secrets: CUSTOM_SECRETS_TYPE_WITH_JSON_SCHEMA | None,
@@ -177,26 +177,31 @@ async def create_new_conversation(
     mcp_config: MCPConfig | None = None,
 ) -> AgentLoopInfo:
     conversation_metadata = await initialize_conversation(
-        user_id,
-        conversation_id,
-        selected_repository,
-        selected_branch,
-        conversation_trigger,
-        git_provider,
+        user_id=user_id,
+        conversation_id=conversation_id,
+        selected_repository=selected_repository,
+        selected_branch=selected_branch,
+        conversation_trigger=conversation_trigger,
+        git_provider=git_provider,
     )
 
+    # ======================= MODIFICATION START =======================
+    # 修复：将所有参数作为关键字参数传递
     return await start_conversation(
-        user_id,
-        git_provider_tokens,
-        custom_secrets,
-        initial_user_msg,
-        image_urls,
-        replay_json,
-        conversation_metadata.conversation_id,
-        conversation_metadata,
-        conversation_instructions,
-        mcp_config,
+        auth=auth,
+        user_id=user_id,
+        git_provider_tokens=git_provider_tokens,
+        custom_secrets=custom_secrets,
+        initial_user_msg=initial_user_msg,
+        image_urls=image_urls,
+        replay_json=replay_json,
+        # conversation_id=conversation_id,  # 添加关键字 'conversation_id='
+        conversation_id=conversation_metadata.conversation_id,
+        conversation_metadata=conversation_metadata,  # 添加关键字 'conversation_metadata='
+        conversation_instructions=conversation_instructions,
+        mcp_config=mcp_config,
     )
+    # ======================= MODIFICATION END =======================
 
 
 def create_provider_tokens_object(

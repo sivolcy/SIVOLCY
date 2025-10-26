@@ -72,6 +72,7 @@ from openhands.server.user_auth import (
     get_user_settings,
     get_user_settings_store,
 )
+from comparegpt.server.auth.jwt_user_auth import JwtUserAuth
 from openhands.server.user_auth.user_auth import AuthType
 from openhands.server.utils import get_conversation as get_conversation_metadata
 from openhands.server.utils import get_conversation_store, validate_conversation_id
@@ -203,10 +204,9 @@ class ProvidersSetModel(BaseModel):
 @app.post('/conversations')
 async def new_conversation(
     data: InitSessionRequest,
-    user_id: str = Depends(get_user_id),
     provider_tokens: PROVIDER_TOKEN_TYPE = Depends(get_provider_tokens),
     user_secrets: UserSecrets = Depends(get_user_secrets),
-    auth_type: AuthType | None = Depends(get_auth_type),
+    auth: JwtUserAuth = Depends(JwtUserAuth.get_instance),
 ) -> ConversationResponse:
     """Initialize a new session or join an existing one.
 
@@ -237,7 +237,7 @@ async def new_conversation(
         if not git_provider and create_microagent.git_provider:
             git_provider = create_microagent.git_provider
 
-    if auth_type == AuthType.BEARER:
+    if auth.auth_type == AuthType.BEARER:
         conversation_trigger = ConversationTrigger.REMOTE_API_KEY
 
     try:
@@ -247,8 +247,10 @@ async def new_conversation(
             await provider_handler.verify_repo_provider(repository, git_provider)
 
         conversation_id = getattr(data, 'conversation_id', None) or uuid.uuid4().hex
+
         agent_loop_info = await create_new_conversation(
-            user_id=user_id,
+            auth=auth,
+            user_id=auth.user_id,
             git_provider_tokens=provider_tokens,
             custom_secrets=user_secrets.custom_secrets if user_secrets else None,
             selected_repository=repository,

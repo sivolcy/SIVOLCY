@@ -48,7 +48,7 @@ export function SettingsModal({ onClose, settings }: SettingsModalProps) {
         {aiConfigOptions.data && (
           <SettingsForm
             settings={settings || DEFAULT_SETTINGS}
-            models={aiConfigOptions.data?.models}
+            // models={aiConfigOptions.data?.models}
             onClose={onClose}
           />
         )}

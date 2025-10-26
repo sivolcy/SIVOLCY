@@ -131,6 +131,18 @@ class LLM(RetryMixin, DebugMixin):
                 f'Rewrote openhands/{model_name} to {self.config.model} with base URL {self.config.base_url}'
             )
 
+        if self.config.model.startswith('comparegpt/'):
+            model_name = self.config.model.removeprefix('comparegpt/')
+            self.config.base_url = 'https://comparegpt.io/api/'
+            logger.debug(
+                f'Rewrote /{model_name} to {self.config.model} with base URL {self.config.base_url}'
+            )
+        if (
+            self.config.custom_llm_provider
+            and self.config.custom_llm_provider.startswith('comparegpt')
+        ):
+            self.config.custom_llm_provider = None
+
         features = get_features(self.config.model)
         if features.supports_reasoning_effort:
             # For Gemini models, only map 'low' to optimized thinking budget
@@ -316,6 +328,7 @@ class LLM(RetryMixin, DebugMixin):
             start_time = time.time()
             # we don't support streaming here, thus we get a ModelResponse
 
+            logger.debug(f'##### args: {args},  kwargs: {kwargs}')
             # Suppress httpx deprecation warnings during LiteLLM calls
             # This prevents the "Use 'content=<...>' to upload raw bytes/text content" warning
             # that appears when LiteLLM makes HTTP requests to LLM providers

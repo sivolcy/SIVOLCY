@@ -2,8 +2,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { AxiosError } from "axios";
 import { useSearchParams } from "react-router";
-import { ModelSelector } from "#/components/shared/modals/settings/model-selector";
-import { organizeModelsAndProviders } from "#/utils/organize-models-and-providers";
+// 移除 ModelSelector 导入,因为我们将使用简化的模型选择
+// import { ModelSelector } from "#/components/shared/modals/settings/model-selector";
 import { useAIConfigOptions } from "#/hooks/query/use-ai-config-options";
 import { useSettings } from "#/hooks/query/use-settings";
 import { hasAdvancedSettingsSet } from "#/utils/has-advanced-settings-set";
@@ -22,48 +22,62 @@ import {
 import { retrieveAxiosErrorMessage } from "#/utils/retrieve-axios-error-message";
 import { SettingsDropdownInput } from "#/components/features/settings/settings-dropdown-input";
 import { useConfig } from "#/hooks/query/use-config";
-import { isCustomModel } from "#/utils/is-custom-model";
 import { LlmSettingsInputsSkeleton } from "#/components/features/settings/llm-settings/llm-settings-inputs-skeleton";
-import { KeyStatusIcon } from "#/components/features/settings/key-status-icon";
+// 移除 KeyStatusIcon 导入,因为不再需要显示 API key 状态
+// import { KeyStatusIcon } from "#/components/features/settings/key-status-icon";
 import { DEFAULT_SETTINGS } from "#/services/settings";
-import { getProviderId } from "#/utils/map-provider";
-import { DEFAULT_OPENHANDS_MODEL } from "#/utils/verified-models";
+// 移除 getProviderId 导入,因为 provider 已固定
+// import { getProviderId } from "#/utils/map-provider";
+// 移除 DEFAULT_OPENHANDS_MODEL 导入,使用新的默认模型
+// import { DEFAULT_OPENHANDS_MODEL } from "#/utils/verified-models";
 import { useSubscriptionAccess } from "#/hooks/query/use-subscription-access";
 import { UpgradeBannerWithBackdrop } from "#/components/features/settings/upgrade-banner-with-backdrop";
 import { useCreateSubscriptionCheckoutSession } from "#/hooks/mutation/stripe/use-create-subscription-checkout-session";
 import { useIsAuthed } from "#/hooks/query/use-is-authed";
 import { cn } from "#/utils/utils";
 
-interface OpenHandsApiKeyHelpProps {
-  testId: string;
-}
+// 【修改1】新增: 定义默认模型和可选模型列表
+const DEFAULT_LLM_MODEL = "gpt-5-mini";
+const AVAILABLE_MODELS = [
+  "gpt-5",
+  "gpt-5-mini",
+  "gpt-4.1",
+  "claude-opus-4",
+  "claude-3-5-haiku",
+];
 
-function OpenHandsApiKeyHelp({ testId }: OpenHandsApiKeyHelpProps) {
-  const { t } = useTranslation();
-
-  return (
-    <>
-      <HelpLink
-        testId={testId}
-        text={t(I18nKey.SETTINGS$OPENHANDS_API_KEY_HELP_TEXT)}
-        linkText={t(I18nKey.SETTINGS$NAV_API_KEYS)}
-        href="https://app.all-hands.dev/settings/api-keys"
-        suffix={` ${t(I18nKey.SETTINGS$OPENHANDS_API_KEY_HELP_SUFFIX)}`}
-      />
-      <p className="text-xs">
-        {t(I18nKey.SETTINGS$LLM_BILLING_INFO)}{" "}
-        <a
-          href="https://docs.all-hands.dev/usage/llms/openhands-llms"
-          rel="noreferrer noopener"
-          target="_blank"
-          className="underline underline-offset-2"
-        >
-          {t(I18nKey.SETTINGS$SEE_PRICING_DETAILS)}
-        </a>
-      </p>
-    </>
-  );
-}
+// 【修改2】移除: OpenHandsApiKeyHelp 组件(如果存在)
+// 因为不再需要显示 API key 相关的帮助信息
+// interface OpenHandsApiKeyHelpProps {
+//   testId: string;
+// }
+//
+// function OpenHandsApiKeyHelp({ testId }: OpenHandsApiKeyHelpProps) {
+//   const { t } = useTranslation();
+//
+//   return (
+//     <>
+//       <HelpLink
+//         testId={testId}
+//         text={t(I18nKey.SETTINGS$OPENHANDS_API_KEY_HELP_TEXT)}
+//         linkText={t(I18nKey.SETTINGS$NAV_API_KEYS)}
+//         href="https://app.all-hands.dev/settings/api-keys"
+//         suffix={` ${t(I18nKey.SETTINGS$OPENHANDS_API_KEY_HELP_SUFFIX)}`}
+//       />
+//       <p className="text-xs">
+//         {t(I18nKey.SETTINGS$LLM_BILLING_INFO)}{" "}
+//         <a
+//           href="https://docs.all-hands.dev/usage/llms/openhands-llms"
+//           rel="noreferrer noopener"
+//           target="_blank"
+//           className="underline underline-offset-2"
+//         >
+//           {t(I18nKey.SETTINGS$SEE_PRICING_DETAILS)}
+//         </a>
+//       </p>
+//     </>
+//   );
+// }
 
 function LlmSettingsScreen() {
   const { t } = useTranslation();
@@ -72,7 +86,8 @@ function LlmSettingsScreen() {
   const { mutate: saveSettings, isPending } = useSaveSettings();
 
   const { data: resources } = useAIConfigOptions();
-  const { data: settings, isLoading, isFetching } = useSettings();
+  // const { data: settings, isLoading, isFetching } = useSettings();
+  const { data: settings, isFetching } = useSettings();
   const { data: config } = useConfig();
   const { data: subscriptionAccess } = useSubscriptionAccess();
   const { data: isAuthed } = useIsAuthed();
@@ -81,11 +96,12 @@ function LlmSettingsScreen() {
 
   const [view, setView] = React.useState<"basic" | "advanced">("basic");
 
+  // 【修改3】简化: 移除 apiKey 和 baseUrl 的 dirty 状态跟踪
   const [dirtyInputs, setDirtyInputs] = React.useState({
     model: false,
-    apiKey: false,
+    // apiKey: false,
     searchApiKey: false,
-    baseUrl: false,
+    // baseUrl: false,
     agent: false,
     confirmationMode: false,
     enableDefaultCondenser: false,
@@ -94,6 +110,7 @@ function LlmSettingsScreen() {
   });
 
   // Track the currently selected model to show help text
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [currentSelectedModel, setCurrentSelectedModel] = React.useState<
     string | null
   >(null);
@@ -111,19 +128,24 @@ function LlmSettingsScreen() {
         : (settings?.SECURITY_ANALYZER ?? DEFAULT_SETTINGS.SECURITY_ANALYZER),
     );
 
-  const modelsAndProviders = organizeModelsAndProviders(
-    resources?.models || [],
-  );
+  // 【修改4】移除: organizeModelsAndProviders 调用,因为不再需要组织 providers
+  // const modelsAndProviders = organizeModelsAndProviders(
+  //   resources?.models || [],
+  // );
 
   React.useEffect(() => {
     const determineWhetherToToggleAdvancedSettings = () => {
       if (resources && settings) {
-        return (
-          isCustomModel(resources.models, settings.LLM_MODEL) ||
-          hasAdvancedSettingsSet({
-            ...settings,
-          })
-        );
+        // 【修改5】简化: 只检查是否有高级设置,不再检查自定义模型
+        return hasAdvancedSettingsSet({
+          ...settings,
+        });
+        // return (
+        //   isCustomModel(resources.models, settings.LLM_MODEL) ||
+        //   hasAdvancedSettingsSet({
+        //     ...settings,
+        //   })
+        // );
       }
 
       return false;
@@ -171,11 +193,12 @@ function LlmSettingsScreen() {
 
   const handleSuccessfulMutation = () => {
     displaySuccessToast(t(I18nKey.SETTINGS$SAVED_WARNING));
+    // 【修改6】简化: 移除 apiKey 和 baseUrl 的 dirty 状态重置
     setDirtyInputs({
       model: false,
-      apiKey: false,
+      // apiKey: false,
       searchApiKey: false,
-      baseUrl: false,
+      // baseUrl: false,
       agent: false,
       confirmationMode: false,
       enableDefaultCondenser: false,
@@ -189,26 +212,36 @@ function LlmSettingsScreen() {
     displayErrorToast(errorMessage || t(I18nKey.ERROR$GENERIC));
   };
 
+  // 【修改7】重构: basicFormAction 只处理模型选择
   const basicFormAction = (formData: FormData) => {
-    const providerDisplay = formData.get("llm-provider-input")?.toString();
-    const provider = providerDisplay
-      ? getProviderId(providerDisplay)
-      : undefined;
     const model = formData.get("llm-model-input")?.toString();
-    const apiKey = formData.get("llm-api-key-input")?.toString();
     const searchApiKey = formData.get("search-api-key-input")?.toString();
     const confirmationMode =
       formData.get("enable-confirmation-mode-switch")?.toString() === "on";
     const securityAnalyzer = formData
       .get("security-analyzer-input")
       ?.toString();
-
-    const fullLlmModel = provider && model && `${provider}/${model}`;
+    // const basicFormAction = (formData: FormData) => {
+    //   const providerDisplay = formData.get("llm-provider-input")?.toString();
+    //   const provider = providerDisplay
+    //     ? getProviderId(providerDisplay)
+    //     : undefined;
+    //   const model = formData.get("llm-model-input")?.toString();
+    //   const apiKey = formData.get("llm-api-key-input")?.toString();
+    //   const searchApiKey = formData.get("search-api-key-input")?.toString();
+    //   const confirmationMode =
+    //     formData.get("enable-confirmation-mode-switch")?.toString() === "on";
+    //   const securityAnalyzer = formData
+    //     .get("security-analyzer-input")
+    //     ?.toString();
+    //
+    //   const fullLlmModel = provider && model && `${provider}/${model}`;
 
     saveSettings(
       {
-        LLM_MODEL: fullLlmModel,
-        llm_api_key: apiKey || null,
+        // 修改7】, LLM_MODEL: fullLlmModel,
+        LLM_MODEL: model || DEFAULT_LLM_MODEL, // 只保存模型名,不带 provider 前缀
+        // llm_api_key: apiKey || null,
         SEARCH_API_KEY: searchApiKey || "",
         CONFIRMATION_MODE: confirmationMode,
         SECURITY_ANALYZER:
@@ -228,10 +261,11 @@ function LlmSettingsScreen() {
     );
   };
 
+  // 【修改8】重构: advancedFormAction 移除 baseUrl 和 apiKey 处理
   const advancedFormAction = (formData: FormData) => {
     const model = formData.get("llm-custom-model-input")?.toString();
-    const baseUrl = formData.get("base-url-input")?.toString();
-    const apiKey = formData.get("llm-api-key-input")?.toString();
+    // const baseUrl = formData.get("base-url-input")?.toString();
+    // const apiKey = formData.get("llm-api-key-input")?.toString();
     const searchApiKey = formData.get("search-api-key-input")?.toString();
     const agent = formData.get("agent-input")?.toString();
     const confirmationMode =
@@ -256,8 +290,8 @@ function LlmSettingsScreen() {
     saveSettings(
       {
         LLM_MODEL: model,
-        LLM_BASE_URL: baseUrl,
-        llm_api_key: apiKey || null,
+        // LLM_BASE_URL: baseUrl,
+        // llm_api_key: apiKey || null,
         SEARCH_API_KEY: searchApiKey || "",
         AGENT: agent,
         CONFIRMATION_MODE: confirmationMode,
@@ -278,11 +312,12 @@ function LlmSettingsScreen() {
 
   const handleToggleAdvancedSettings = (isToggled: boolean) => {
     setView(isToggled ? "advanced" : "basic");
+    // 【修改9】简化: 移除 apiKey 和 baseUrl 的 dirty 状态重置
     setDirtyInputs({
       model: false,
-      apiKey: false,
+      // apiKey: false,
       searchApiKey: false,
-      baseUrl: false,
+      // baseUrl: false,
       agent: false,
       confirmationMode: false,
       enableDefaultCondenser: false,
@@ -291,10 +326,12 @@ function LlmSettingsScreen() {
     });
   };
 
+  // 【修改10】简化: handleModelIsDirty 不再处理 provider 前缀
   const handleModelIsDirty = (model: string | null) => {
     // openai providers are special case; see ModelSelector
     // component for details
-    const modelIsDirty = model !== settings?.LLM_MODEL.replace("openai/", "");
+    const modelIsDirty = model !== settings?.LLM_MODEL;
+    // const modelIsDirty = model !== settings?.LLM_MODEL.replace("openai/", "");
     setDirtyInputs((prev) => ({
       ...prev,
       model: modelIsDirty,
@@ -304,13 +341,14 @@ function LlmSettingsScreen() {
     setCurrentSelectedModel(model);
   };
 
-  const handleApiKeyIsDirty = (apiKey: string) => {
-    const apiKeyIsDirty = apiKey !== "";
-    setDirtyInputs((prev) => ({
-      ...prev,
-      apiKey: apiKeyIsDirty,
-    }));
-  };
+  // 【修改11】移除: handleApiKeyIsDirty 函数
+  // const handleApiKeyIsDirty = (apiKey: string) => {
+  //   const apiKeyIsDirty = apiKey !== "";
+  //   setDirtyInputs((prev) => ({
+  //     ...prev,
+  //     apiKey: apiKeyIsDirty,
+  //   }));
+  // };
 
   const handleSearchApiKeyIsDirty = (searchApiKey: string) => {
     const searchApiKeyIsDirty = searchApiKey !== settings?.SEARCH_API_KEY;
@@ -320,24 +358,25 @@ function LlmSettingsScreen() {
     }));
   };
 
-  const handleCustomModelIsDirty = (model: string) => {
-    const modelIsDirty = model !== settings?.LLM_MODEL && model !== "";
-    setDirtyInputs((prev) => ({
-      ...prev,
-      model: modelIsDirty,
-    }));
+  // const handleCustomModelIsDirty = (model: string) => {
+  //   const modelIsDirty = model !== settings?.LLM_MODEL && model !== "";
+  //   setDirtyInputs((prev) => ({
+  //     ...prev,
+  //     model: modelIsDirty,
+  //   }));
 
-    // Track the currently selected model for help text display
-    setCurrentSelectedModel(model);
-  };
+  //   // Track the currently selected model for help text display
+  //   setCurrentSelectedModel(model);
+  // };
 
-  const handleBaseUrlIsDirty = (baseUrl: string) => {
-    const baseUrlIsDirty = baseUrl !== settings?.LLM_BASE_URL;
-    setDirtyInputs((prev) => ({
-      ...prev,
-      baseUrl: baseUrlIsDirty,
-    }));
-  };
+  // 【修改12】移除: handleBaseUrlIsDirty 函数
+  // const handleBaseUrlIsDirty = (baseUrl: string) => {
+  //   const baseUrlIsDirty = baseUrl !== settings?.LLM_BASE_URL;
+  //   setDirtyInputs((prev) => ({
+  //     ...prev,
+  //     baseUrl: baseUrlIsDirty,
+  //   }));
+  // };
 
   const handleAgentIsDirty = (agent: string) => {
     const agentIsDirty = agent !== settings?.AGENT && agent !== "";
@@ -395,6 +434,7 @@ function LlmSettingsScreen() {
     }));
   };
 
+  // 【修改13】简化: formIsDirty 不再检查 apiKey 和 baseUrl
   const formIsDirty = Object.values(dirtyInputs).some((isDirty) => isDirty);
 
   const getSecurityAnalyzerOptions = () => {
@@ -493,7 +533,22 @@ function LlmSettingsScreen() {
               className="flex flex-col gap-6"
               aria-disabled={shouldShowUpgradeBanner ? "true" : undefined}
             >
-              {!isLoading && !isFetching && (
+              {/* 【修改14】新增: 简化的模型选择下拉框,替代原来的 ModelSelector */}
+              <SettingsDropdownInput
+                testId="llm-model-input"
+                name="llm-model-input"
+                label={t(I18nKey.LLM$MODEL)}
+                items={AVAILABLE_MODELS.map((model) => ({
+                  key: model,
+                  label: model,
+                }))}
+                defaultSelectedKey={settings.LLM_MODEL || DEFAULT_LLM_MODEL}
+                isClearable={false}
+                onInputChange={handleModelIsDirty}
+                wrapperClassName="w-full max-w-[680px]"
+                isDisabled={shouldShowUpgradeBanner}
+              />
+              {/* {!isLoading && !isFetching && (
                 <>
                   <ModelSelector
                     models={modelsAndProviders}
@@ -507,9 +562,10 @@ function LlmSettingsScreen() {
                     <OpenHandsApiKeyHelp testId="openhands-api-key-help" />
                   )}
                 </>
-              )}
+              )} */}
 
-              <SettingsInput
+              {/* 【修改15】移除: API Key 输入框 */}
+              {/* <SettingsInput
                 testId="llm-api-key-input"
                 name="llm-api-key-input"
                 label={t(I18nKey.SETTINGS_FORM$API_KEY)}
@@ -523,14 +579,15 @@ function LlmSettingsScreen() {
                     <KeyStatusIcon isSet={settings.LLM_API_KEY_SET} />
                   )
                 }
-              />
+              /> */}
 
-              <HelpLink
+              {/* 【修改16】移除: API Key 帮助链接 */}
+              {/* <HelpLink
                 testId="llm-api-key-help-anchor"
                 text={t(I18nKey.SETTINGS$DONT_KNOW_API_KEY)}
                 linkText={t(I18nKey.SETTINGS$CLICK_FOR_INSTRUCTIONS)}
                 href="https://docs.all-hands.dev/usage/local-setup#getting-an-api-key"
-              />
+              /> */}
 
               {config?.APP_MODE !== "saas" && (
                 <SettingsInput
@@ -543,22 +600,22 @@ function LlmSettingsScreen() {
                   onChange={handleSearchApiKeyIsDirty}
                   placeholder={t(I18nKey.API$TAVILY_KEY_EXAMPLE)}
                   isDisabled={shouldShowUpgradeBanner}
-                  startContent={
-                    settings.SEARCH_API_KEY_SET && (
-                      <KeyStatusIcon isSet={settings.SEARCH_API_KEY_SET} />
-                    )
-                  }
+                  // startContent={
+                  //   settings.SEARCH_API_KEY_SET && (
+                  //     <KeyStatusIcon isSet={settings.SEARCH_API_KEY_SET} />
+                  //   )
+                  // }
                 />
               )}
 
-              {config?.APP_MODE !== "saas" && (
+              {/* {config?.APP_MODE !== "saas" && (
                 <HelpLink
                   testId="search-api-key-help-anchor"
                   text={t(I18nKey.SETTINGS$SEARCH_API_KEY_OPTIONAL)}
                   linkText={t(I18nKey.SETTINGS$SEARCH_API_KEY_INSTRUCTIONS)}
                   href="https://tavily.com/"
                 />
-              )}
+              )} */}
             </div>
           )}
 
@@ -567,7 +624,8 @@ function LlmSettingsScreen() {
               data-testid="llm-settings-form-advanced"
               className="flex flex-col gap-6"
             >
-              <SettingsInput
+              {/* 【修改17】保留: 自定义模型输入框 */}
+              {/* <SettingsInput
                 testId="llm-custom-model-input"
                 name="llm-custom-model-input"
                 label={t(I18nKey.SETTINGS$CUSTOM_MODEL)}
@@ -580,9 +638,10 @@ function LlmSettingsScreen() {
               {(settings.LLM_MODEL?.startsWith("openhands/") ||
                 currentSelectedModel?.startsWith("openhands/")) && (
                 <OpenHandsApiKeyHelp testId="openhands-api-key-help-2" />
-              )}
+              )} */}
 
-              <SettingsInput
+              {/* 【修改18】移除: Base URL 输入框 */}
+              {/* <SettingsInput
                 testId="base-url-input"
                 name="base-url-input"
                 label={t(I18nKey.SETTINGS$BASE_URL)}
@@ -591,9 +650,10 @@ function LlmSettingsScreen() {
                 type="text"
                 className="w-full max-w-[680px]"
                 onChange={handleBaseUrlIsDirty}
-              />
+              /> */}
 
-              <SettingsInput
+              {/* 【修改19】移除: API Key 输入框 */}
+              {/* <SettingsInput
                 testId="llm-api-key-input"
                 name="llm-api-key-input"
                 label={t(I18nKey.SETTINGS_FORM$API_KEY)}
@@ -606,13 +666,14 @@ function LlmSettingsScreen() {
                     <KeyStatusIcon isSet={settings.LLM_API_KEY_SET} />
                   )
                 }
-              />
-              <HelpLink
+              /> */}
+              {/* 【修改20】移除: API Key 帮助链接 */}
+              {/* <HelpLink
                 testId="llm-api-key-help-anchor-advanced"
                 text={t(I18nKey.SETTINGS$DONT_KNOW_API_KEY)}
                 linkText={t(I18nKey.SETTINGS$CLICK_FOR_INSTRUCTIONS)}
                 href="https://docs.all-hands.dev/usage/local-setup#getting-an-api-key"
-              />
+              /> */}
 
               {config?.APP_MODE !== "saas" && (
                 <>
@@ -626,11 +687,11 @@ function LlmSettingsScreen() {
                     onChange={handleSearchApiKeyIsDirty}
                     placeholder={t(I18nKey.API$TVLY_KEY_EXAMPLE)}
                     isDisabled={shouldShowUpgradeBanner}
-                    startContent={
-                      settings.SEARCH_API_KEY_SET && (
-                        <KeyStatusIcon isSet={settings.SEARCH_API_KEY_SET} />
-                      )
-                    }
+                    // startContent={
+                    //   settings.SEARCH_API_KEY_SET && (
+                    //     <KeyStatusIcon isSet={settings.SEARCH_API_KEY_SET} />
+                    //   )
+                    // }
                   />
 
                   <HelpLink

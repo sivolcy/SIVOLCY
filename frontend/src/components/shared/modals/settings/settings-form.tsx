@@ -3,11 +3,13 @@ import { useTranslation } from "react-i18next";
 import React from "react";
 import posthog from "posthog-js";
 import { I18nKey } from "#/i18n/declaration";
-import { organizeModelsAndProviders } from "#/utils/organize-models-and-providers";
+// 移除 organizeModelsAndProviders 导入，因为它不再被使用
+// import { organizeModelsAndProviders } from "#/utils/organize-models-and-providers";
 import { DangerModal } from "../confirmation-modals/danger-modal";
 import { extractSettings } from "#/utils/settings-utils";
 import { ModalBackdrop } from "../modal-backdrop";
-import { ModelSelector } from "./model-selector";
+// 移除 ModelSelector 导入，因为它不再被使用
+// import { ModelSelector } from "./model-selector";
 import { Settings } from "#/types/settings";
 import { BrandButton } from "#/components/features/settings/brand-button";
 import { SettingsInput } from "#/components/features/settings/settings-input";
@@ -17,11 +19,13 @@ import { SETTINGS_FORM } from "#/utils/constants";
 
 interface SettingsFormProps {
   settings: Settings;
-  models: string[];
+  // 移除 models 属性，因为它不再被 ModelSelector 需要
+  // models: string[];
   onClose: () => void;
 }
 
-export function SettingsForm({ settings, models, onClose }: SettingsFormProps) {
+// 从 props 解构中移除 models
+export function SettingsForm({ settings, onClose }: SettingsFormProps) {
   const { mutate: saveUserSettings } = useSaveSettings();
 
   const location = useLocation();
@@ -77,12 +81,13 @@ export function SettingsForm({ settings, models, onClose }: SettingsFormProps) {
         onSubmit={handleSubmit}
       >
         <div className="flex flex-col gap-[17px]">
-          <ModelSelector
+          {/* 移除 ModelSelector 组件，因为它不再被使用 */}
+          {/* <ModelSelector
             models={organizeModelsAndProviders(models)}
             currentModel={settings.LLM_MODEL}
             wrapperClassName="!flex-col !gap-[17px]"
             labelClassName={SETTINGS_FORM.LABEL_CLASSNAME}
-          />
+          /> */}
 
           <SettingsInput
             testId="llm-api-key-input"

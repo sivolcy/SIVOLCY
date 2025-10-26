@@ -26,6 +26,7 @@ class Settings(BaseModel):
     security_analyzer: str | None = None
     confirmation_mode: bool | None = None
     llm_model: str | None = None
+    # llm_api_key 和 llm_base_url 不从前端接收
     llm_api_key: SecretStr | None = None
     llm_base_url: str | None = None
     remote_runtime_resource_factor: int | None = None
