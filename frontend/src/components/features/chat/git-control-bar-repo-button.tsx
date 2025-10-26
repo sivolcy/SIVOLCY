@@ -52,7 +52,7 @@ export function GitControlBarRepoButton({
       <div
         className={cn(
           "font-normal text-sm leading-5 truncate flex-1 min-w-0",
-          hasRepository ? "text-white" : "text-black"
+          hasRepository ? "text-white" : "text-black",
         )}
         title={buttonText}
       >

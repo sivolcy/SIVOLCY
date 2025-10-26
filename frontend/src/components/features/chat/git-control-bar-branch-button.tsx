@@ -38,12 +38,16 @@ export function GitControlBarBranchButton({
       )}
     >
       <div className="w-3 h-3 flex items-center justify-center flex-shrink-0">
-        <BranchIcon width={12} height={12} color={hasBranch ? "white" : "black"} />
+        <BranchIcon
+          width={12}
+          height={12}
+          color={hasBranch ? "white" : "black"}
+        />
       </div>
       <div
         className={cn(
           "font-normal text-sm leading-5 truncate",
-          hasBranch ? "text-white" : "text-black"
+          hasBranch ? "text-white" : "text-black",
         )}
         title={buttonText}
       >

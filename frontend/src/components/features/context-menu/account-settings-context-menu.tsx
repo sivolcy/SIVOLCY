@@ -63,9 +63,7 @@ export function AccountSettingsContextMenu({
         className="flex items-center gap-2 p-2 text-black hover:bg-[#5C5D62] hover:text-white rounded h-[30px]"
       >
         <LogOutIcon width={16} height={16} />
-        <span className="text-sm">
-          {t(I18nKey.ACCOUNT_SETTINGS$LOGOUT)}
-        </span>
+        <span className="text-sm">{t(I18nKey.ACCOUNT_SETTINGS$LOGOUT)}</span>
       </ContextMenuListItem>
     </ContextMenu>
   );
