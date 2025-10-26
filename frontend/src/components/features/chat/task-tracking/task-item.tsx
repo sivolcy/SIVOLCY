@@ -22,17 +22,17 @@ export function TaskItem({ task, index }: TaskItemProps) {
         <StatusIcon status={task.status} />
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1">
-            <Typography.Text className="text-sm text-gray-400">
+            <Typography.Text className="text-sm text-black">
               {index + 1}.
             </Typography.Text>
             <StatusBadge status={task.status} />
           </div>
-          <h4 className="font-medium text-white mb-1">{task.title}</h4>
-          <Typography.Text className="text-xs text-gray-400 mb-1">
+          <h4 className="font-medium text-black mb-1">{task.title}</h4>
+          <Typography.Text className="text-xs text-black mb-1">
             {t("TASK_TRACKING_OBSERVATION$TASK_ID")}: {task.id}
           </Typography.Text>
           {task.notes && (
-            <Typography.Text className="text-sm text-gray-300 italic">
+            <Typography.Text className="text-sm text-black italic">
               {t("TASK_TRACKING_OBSERVATION$TASK_NOTES")}: {task.notes}
             </Typography.Text>
           )}
