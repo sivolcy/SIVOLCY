@@ -10,6 +10,9 @@ class AuthMiddleware:
         public_paths = ['/api/health',
                         '/api/public',
                         '/api/options/config',  # 前端需要在认证前获取配置
+                        '/assets/',  # 静态资源
+                        '/locales/'
+                        '/favicon.ico',
                         # '/api/check_auth',
                         # '/mcp/sse',
                         # '/mcp',
@@ -33,6 +36,8 @@ class AuthMiddleware:
 
             return response
         except Exception as e:
+            logger.error(f"AuthMiddleware: Exception during authentication: {str(e)}")
+            traceback.print_exc(file=sys.stdout)
             return JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 content={'error': str(e)}
