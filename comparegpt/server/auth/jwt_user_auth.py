@@ -43,18 +43,18 @@ class JwtUserAuth(UserAuth):
         # ======================= MODIFICATION END =======================
 
     async def get_user_id(self) -> str | None:
-        logger.info(f"get_user_id(): {self.user_id}")
+        logger.debug(f"get_user_id(): {self.user_id}")
         return self.user_id
 
     async def get_user_email(self) -> str | None:
         return self.email
 
     async def get_access_token(self) -> SecretStr | None:
-        logger.info(f"get_access_token(): {SecretStr(self.token)}")
+        logger.debug(f"get_access_token(): {SecretStr(self.token)}")
         return SecretStr(self.token)
 
     async def get_provider_tokens(self):
-        logger.info(f"get_provider_tokens(): entry")
+        logger.debug(f"get_provider_tokens(): entry")
         secrets_store = await self.get_secrets_store()
         user_secrets = await secrets_store.load()
         if user_secrets:
@@ -62,7 +62,7 @@ class JwtUserAuth(UserAuth):
         return None
 
     async def get_user_settings_store(self):
-        logger.info(f"get_user_settings_store(): entry")
+        logger.debug(f"get_user_settings_store(): entry")
         # return FileSettingsStore(self.user_id)
         settings_store = self._settings_store
         if settings_store:
@@ -74,11 +74,11 @@ class JwtUserAuth(UserAuth):
         if settings_store is None:
             raise ValueError('Failed to get settings store instance')
         self._settings_store = settings_store
-        logger.info(f"get_user_settings_store():  exit")
+        logger.debug(f"get_user_settings_store():  exit")
         return settings_store
 
     async def get_user_settings(self) -> Settings | None:
-        logger.info(f"get_user_settings():  entry")
+        logger.debug(f"get_user_settings():  entry")
         settings = self._settings
         if settings:
             return settings
@@ -87,36 +87,86 @@ class JwtUserAuth(UserAuth):
 
         # 如果没有存储的 settings,创建默认配置
         if not settings:
-            logger.info(f"No existing settings for user {self.user_id}, creating defaults")
-            settings = Settings(
-                llm_model='gpt-5-mini',  # 或其他默认模型
-                llm_api_key=SecretStr(self.api_key),
-                llm_base_url='https://comparegpt.io/api',
-                agent='CodeActAgent',
-            )
+            logger.info(f"##### No existing settings for user {self.user_id}, creating defaults ...")
+
+            # 从 config.toml 获取默认配置
+            config_settings = Settings.from_config()
+
+            if config_settings:
+                # 使用 config.toml 的值,但覆盖 API key 为 JWT 中的值
+                settings = Settings(
+                    llm_model=config_settings.llm_model,  # 从 config.toml 读取
+                    llm_api_key=SecretStr(self.api_key),  # 使用 JWT 中的 api_key
+                    llm_base_url=config_settings.llm_base_url,  # 从 config.toml 读取
+                    agent=config_settings.agent,
+                    max_iterations=config_settings.max_iterations,
+                    # security_analyzer=config_settings.security_analyzer,
+                    # confirmation_mode=config_settings.confirmation_mode,
+                )
+            else:
+                # 如果 config.toml 没有配置,使用硬编码的默认值作为后备
+                settings = Settings(
+                    llm_model='gpt-5-mini',
+                    llm_api_key=SecretStr(self.api_key),
+                    llm_base_url='https://comparegpt.io/api',
+                    agent='CodeActAgent',
+                )
+
             # 保存默认配置
             await settings_store.store(settings)
-            logger.info(f"Default settings saved for user {self.user_id}")
+            logger.info(f"##### Default settings saved for user {self.user_id}")
         else:
+            # # 如果存在 settings 但缺少 LLM 配置,更新它们
+            # if not settings.llm_api_key:
+            #     settings.llm_api_key = SecretStr(self.api_key)
+            # if not settings.llm_base_url:
+            #     settings.llm_base_url = 'https://comparegpt.io/api'
+            # await settings_store.store(settings)
+
+            # 从 config.toml 获取默认配置
+            config_settings = Settings.from_config()
+
             # 如果存在 settings 但缺少 LLM 配置,更新它们
-            if not settings.llm_api_key:
-                settings.llm_api_key = SecretStr(self.api_key)
-            if not settings.llm_base_url:
-                settings.llm_base_url = 'https://comparegpt.io/api'
+            if config_settings:
+                if self.api_key != config_settings.llm_api_key:
+                    logger.info(f"##### Found existing settings for user {self.user_id}, updating changed api_key ...")
+                    logger.debug(f"####### NOT EQUAL ##########")
+
+                    # 更新 API key 为 JWT 中的值，更新 base_url
+                    settings = Settings(
+                        # llm_model=config_settings.llm_model,  # 从 config.toml 读取
+                        llm_api_key=SecretStr(self.api_key),  # 使用 JWT 中的 api_key
+                        llm_base_url=config_settings.llm_base_url,  # 从 config.toml 读取
+                        # agent=config_settings.agent,
+                        # max_iterations=config_settings.max_iterations,
+                        # security_analyzer=config_settings.security_analyzer,
+                        # confirmation_mode=config_settings.confirmation_mode,
+                    )
+                else:
+                    logger.debug(f"####### EQUAL ##########")
+            else:
+                # 如果 config.toml 没有配置,使用硬编码的默认值作为后备
+                settings = Settings(
+                    llm_model='gpt-5-mini',
+                    llm_api_key=SecretStr(self.api_key),
+                    llm_base_url='https://comparegpt.io/api',
+                    agent='CodeActAgent',
+                )
             await settings_store.store(settings)
+            logger.info(f"##### Settings updated for user {self.user_id}")
 
         # Merge config.toml settings with stored settings
         if settings:
             settings = settings.merge_with_config_settings()
 
         self._settings = settings
-        logger.info(f"get_user_settings():  exit")
+        logger.debug(f"get_user_settings():  exit")
         return settings
 
     async def get_secrets_store(self):
         # logger.info(f"get_secrets_store(): FileSecretsStore(self.user_id)")
         # return FileSecretsStore(self.user_id)
-        logger.info(f"get_secrets_store(): entry")
+        logger.debug(f"get_secrets_store(): entry")
         secrets_store = self._secrets_store
         if secrets_store:
             return secrets_store
@@ -127,28 +177,44 @@ class JwtUserAuth(UserAuth):
         if secret_store is None:
             raise ValueError('Failed to get secrets store instance')
         self._secrets_store = secret_store
-        logger.info(f"get_secrets_store(): exit")
+        logger.debug(f"get_secrets_store(): exit")
         return secret_store
 
     async def get_llm_credentials(self) -> dict[str, str]:
         """Expose provider/base_url/api_key parsed from JWT for downstream services."""
         if not self.api_key:
             raise HTTPException(status_code=401, detail='Missing LLM API key in token')  # 确保所有 LLM 调用都有凭证
+
+        config_settings = Settings.from_config()
+
+        # base_url = ""
+        # if config_settings:
+        #     base_url = config_settings.llm_base_url
+        # else:
+        #     base_url = 'https://comparegpt.io/api'
+
+        base_url = (
+            config_settings.llm_base_url
+            if config_settings and config_settings.llm_base_url
+            else 'https://comparegpt.io/api'
+        )
+
         return {
             'provider': 'comparegpt',  # provider 固定
-            'base_url': 'https://comparegpt.io/api',  # base URL 固定
+            'base_url': base_url,
             'api_key': self.api_key,  # 来自 JWT
+            # 'api_key': "cgpt_oOtQljEyoYBHvW3F2MmZX218yROo3lrn"
         }
 
     async def get_user_secrets(self) -> UserSecrets | None:
-        logger.info(f"get_user_secrets(): entry")
+        logger.debug(f"get_user_secrets(): entry")
         user_secrets = self._user_secrets
         if user_secrets:
             return user_secrets
         secrets_store = await self.get_secrets_store()
         user_secrets = await secrets_store.load()
         self._user_secrets = user_secrets
-        logger.info(f"get_user_secrets(): exit")
+        logger.debug(f"get_user_secrets(): exit")
         return user_secrets
 
     # async def get_user_secrets(self):
@@ -165,7 +231,7 @@ class JwtUserAuth(UserAuth):
         # 对于 JWT 认证,这个方法可能不太适用
         # 因为通常需要从请求中获取 token
         # 但为了满足抽象类要求,可以这样实现:
-        logger.info("get_for_user(): cls(user_id=user_id, token='', email=None)")
+        logger.debug("get_for_user(): cls(user_id=user_id, token='', email=None)")
         return cls(user_id=user_id, token='', email='', user_name='', role='', api_key='', expiration=0)
 
     @classmethod

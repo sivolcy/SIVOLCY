@@ -133,10 +133,11 @@ class LLM(RetryMixin, DebugMixin):
 
         if self.config.model.startswith('comparegpt/'):
             model_name = self.config.model.removeprefix('comparegpt/')
-            self.config.base_url = 'https://comparegpt.io/api/'
+            # self.config.base_url = 'https://comparegpt.io/api/'
             logger.debug(
                 f'Rewrote /{model_name} to {self.config.model} with base URL {self.config.base_url}'
             )
+
         if (
             self.config.custom_llm_provider
             and self.config.custom_llm_provider.startswith('comparegpt')
@@ -206,6 +207,8 @@ class LLM(RetryMixin, DebugMixin):
         ):
             kwargs.pop('top_p', None)
 
+        # logger.debug(f"##### base_url={self.config.base_url}, api_key={self.config.api_key.get_secret_value()}")
+
         self._completion = partial(
             litellm_completion,
             model=self.config.model,
@@ -215,6 +218,7 @@ class LLM(RetryMixin, DebugMixin):
             base_url=self.config.base_url,
             api_version=self.config.api_version,
             custom_llm_provider=self.config.custom_llm_provider,
+            # stream=False,
             timeout=self.config.timeout,
             drop_params=self.config.drop_params,
             seed=self.config.seed,
@@ -820,22 +824,75 @@ class LLM(RetryMixin, DebugMixin):
         return str(self)
 
     def format_messages_for_llm(self, messages: Message | list[Message]) -> list[dict]:
+        logger.debug(
+            f'##### entry. type(messages)={type(messages)}, messages={messages}'
+        )
         if isinstance(messages, Message):
             messages = [messages]
 
-        # set flags to know how to serialize the messages
+        formatted: list[dict[str, Any]] = []
+
         for message in messages:
-            message.cache_enabled = self.is_caching_prompt_active()
-            message.vision_enabled = self.vision_is_active()
-            message.function_calling_enabled = self.is_function_calling_active()
-            if 'deepseek' in self.config.model:
-                message.force_string_serializer = True
-            if 'kimi-k2-instruct' in self.config.model and 'groq' in self.config.model:
-                message.force_string_serializer = True
-            if 'openrouter/anthropic/claude-sonnet-4' in self.config.model:
-                message.force_string_serializer = True
-            if 'openrouter/anthropic/claude-sonnet-4-5-20250929' in self.config.model:
-                message.force_string_serializer = True
+            if isinstance(message, Message):
+                message.cache_enabled = self.is_caching_prompt_active()
+                message.vision_enabled = self.vision_is_active()
+                message.function_calling_enabled = self.is_function_calling_active()
+
+                if 'deepseek' in self.config.model:
+                    message.force_string_serializer = True
+                if (
+                    'kimi-k2-instruct' in self.config.model
+                    and 'groq' in self.config.model
+                ):
+                    message.force_string_serializer = True
+                if 'openrouter/anthropic/claude-sonnet-4' in self.config.model:
+                    message.force_string_serializer = True
+                if (
+                    'openrouter/anthropic/claude-sonnet-4-5-20250929'
+                    in self.config.model
+                ):
+                    message.force_string_serializer = True
+
+                formatted.append(message.model_dump())
+            # elif isinstance(message, dict):
+            #     formatted.append(message)
+            # elif isinstance(message, str):
+            #     logger.warning(
+            #         'Coercing string message into dict payload; please update caller to use Message/TextContent.'
+            #     )
+            #     formatted.append({'role': 'user', 'content': message})
+            else:
+                raise TypeError(
+                    f'Unsupported message type {type(message)} encountered when formatting payload.'
+                )
+
+        logger.debug(
+            f'##### exit. type(formatted)={type(formatted)}, formatted={formatted}'
+        )
+        return formatted
+
+        # logger.debug(
+        #     f'##### entry. type(messages)={type(messages)}, messages={messages}'
+        # )
+
+        # # set flags to know how to serialize the messages
+        # for message in messages:
+        #     message.cache_enabled = self.is_caching_prompt_active()
+        #     message.vision_enabled = self.vision_is_active()
+        #     message.function_calling_enabled = self.is_function_calling_active()
+        #     if 'deepseek' in self.config.model:
+        #         message.force_string_serializer = True
+        #     if 'kimi-k2-instruct' in self.config.model and 'groq' in self.config.model:
+        #         message.force_string_serializer = True
+        #     if 'openrouter/anthropic/claude-sonnet-4' in self.config.model:
+        #         message.force_string_serializer = True
+        #     if 'openrouter/anthropic/claude-sonnet-4-5-20250929' in self.config.model:
+        #         message.force_string_serializer = True
+
+        # result = [message.model_dump() for message in messages]
+
+        # logger.debug(f'##### exit. type(result)={type(result)}, result={result}')
 
         # let pydantic handle the serialization
-        return [message.model_dump() for message in messages]
+        # return [message.model_dump() for message in messages]
+        # return result
