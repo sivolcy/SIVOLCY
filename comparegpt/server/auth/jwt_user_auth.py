@@ -77,91 +77,133 @@ class JwtUserAuth(UserAuth):
         logger.debug(f"get_user_settings_store():  exit")
         return settings_store
 
-    async def get_user_settings(self) -> Settings | None:
-        logger.debug(f"get_user_settings():  entry")
-        settings = self._settings
-        if settings:
-            return settings
+    # async def get_user_settings_old(self) -> Settings | None:
+    #     logger.debug(f"get_user_settings():  entry")
+    #     settings = self._settings
+    #     if settings:
+    #         return settings
+    #     settings_store = await self.get_user_settings_store()
+    #     settings = await settings_store.load()
+
+    #     # 从 config.toml 获取默认配置
+    #     config_settings = Settings.from_config()
+    #     if not config_settings:
+    #         logger.error(f"##### NOT FOUND config.toml! #####")
+    #         raise Exception(detail='NOT FOUND config.toml.')
+
+    #     if not config_settings.llm_base_url or not config_settings.llm_model:
+    #         logger.error(f"##### NOT FOUND base_url and model setting in config.toml! #####")
+    #         raise Exception(detail='NOT FOUND base_url and model setting in config.toml.')
+
+    #     # 如果没有存储的 settings,创建默认配置
+    #     if not settings:
+    #         logger.info(f"##### No existing settings for user {self.user_id}, creating defaults ...")
+
+    #         # 使用 config.toml 的值,但覆盖 API key 为 JWT 中的值
+    #         settings = Settings(
+    #             llm_model=config_settings.llm_model,  # 从 config.toml 读取
+    #             llm_api_key=SecretStr(self.api_key),  # 使用 JWT 中的 api_key
+    #             llm_base_url=config_settings.llm_base_url,  # 从 config.toml 读取
+    #             agent=config_settings.agent,
+    #             max_iterations=config_settings.max_iterations,
+    #             # security_analyzer=config_settings.security_analyzer,
+    #             # confirmation_mode=config_settings.confirmation_mode,
+    #         )
+
+    #         # 保存默认配置
+    #         await settings_store.store(settings)
+    #         logger.info(f"##### Default settings saved for user {self.user_id}")
+    #     else:
+    #         # 如果存在 settings 但缺少 LLM 配置,更新它们
+    #         if not settings.llm_api_key:
+    #             settings.llm_api_key = SecretStr(self.api_key)
+    #         if not settings.llm_base_url:
+    #             settings.llm_base_url = config_settings.llm_base_url
+
+    #         if self.api_key != config_settings.llm_api_key:
+    #             logger.info(f"##### Found existing settings for user {self.user_id}, updating changed api_key ...")
+    #             logger.debug(f"####### NOT EQUAL ##########")
+
+    #             # 更新 API key 为 JWT 中的值，更新 base_url
+    #             settings = Settings(
+    #                 # llm_model=config_settings.llm_model,  # 从 config.toml 读取
+    #                 llm_api_key=SecretStr(self.api_key),  # 使用 JWT 中的 api_key
+    #                 llm_base_url=config_settings.llm_base_url,  # 从 config.toml 读取
+    #                 # agent=config_settings.agent,
+    #                 # max_iterations=config_settings.max_iterations,
+    #                 # security_analyzer=config_settings.security_analyzer,
+    #                 # confirmation_mode=config_settings.confirmation_mode,
+    #             )
+    #         else:
+    #             logger.debug(f"####### EQUAL ##########")
+
+    #         await settings_store.store(settings)
+    #         logger.info(f"##### Settings updated for user {self.user_id}")
+
+    #     # Merge config.toml settings with stored settings
+    #     if settings:
+    #         settings = settings.merge_with_config_settings()
+
+    #     self._settings = settings
+    #     logger.debug(f"get_user_settings():  exit")
+    #     return settings
+
+    async def get_user_settings(self) -> Settings:
+        """
+        加载用户设置，如果不存在则创建。
+        """
+        logger.debug("get_user_settings(): entry")
+        if self._settings:
+            return self._settings
+
         settings_store = await self.get_user_settings_store()
         settings = await settings_store.load()
 
-        # 如果没有存储的 settings,创建默认配置
+        # 如果设置不存在，则创建默认设置
         if not settings:
-            logger.info(f"##### No existing settings for user {self.user_id}, creating defaults ...")
+            settings = await self._create_and_store_default_settings(settings_store)
+        # 如果 JWT 中的 API Key 与存储的不一致，则更新
+        elif settings.llm_api_key.get_secret_value() != self.api_key:
+            settings = await self._update_settings_with_new_key(settings_store, settings)
 
-            # 从 config.toml 获取默认配置
-            config_settings = Settings.from_config()
-
-            if config_settings:
-                # 使用 config.toml 的值,但覆盖 API key 为 JWT 中的值
-                settings = Settings(
-                    llm_model=config_settings.llm_model,  # 从 config.toml 读取
-                    llm_api_key=SecretStr(self.api_key),  # 使用 JWT 中的 api_key
-                    llm_base_url=config_settings.llm_base_url,  # 从 config.toml 读取
-                    agent=config_settings.agent,
-                    max_iterations=config_settings.max_iterations,
-                    # security_analyzer=config_settings.security_analyzer,
-                    # confirmation_mode=config_settings.confirmation_mode,
-                )
-            else:
-                # 如果 config.toml 没有配置,使用硬编码的默认值作为后备
-                settings = Settings(
-                    llm_model='gpt-5-mini',
-                    llm_api_key=SecretStr(self.api_key),
-                    llm_base_url='https://comparegpt.io/api',
-                    agent='CodeActAgent',
-                )
-
-            # 保存默认配置
-            await settings_store.store(settings)
-            logger.info(f"##### Default settings saved for user {self.user_id}")
-        else:
-            # # 如果存在 settings 但缺少 LLM 配置,更新它们
-            # if not settings.llm_api_key:
-            #     settings.llm_api_key = SecretStr(self.api_key)
-            # if not settings.llm_base_url:
-            #     settings.llm_base_url = 'https://comparegpt.io/api'
-            # await settings_store.store(settings)
-
-            # 从 config.toml 获取默认配置
-            config_settings = Settings.from_config()
-
-            # 如果存在 settings 但缺少 LLM 配置,更新它们
-            if config_settings:
-                if self.api_key != config_settings.llm_api_key:
-                    logger.info(f"##### Found existing settings for user {self.user_id}, updating changed api_key ...")
-                    logger.debug(f"####### NOT EQUAL ##########")
-
-                    # 更新 API key 为 JWT 中的值，更新 base_url
-                    settings = Settings(
-                        # llm_model=config_settings.llm_model,  # 从 config.toml 读取
-                        llm_api_key=SecretStr(self.api_key),  # 使用 JWT 中的 api_key
-                        llm_base_url=config_settings.llm_base_url,  # 从 config.toml 读取
-                        # agent=config_settings.agent,
-                        # max_iterations=config_settings.max_iterations,
-                        # security_analyzer=config_settings.security_analyzer,
-                        # confirmation_mode=config_settings.confirmation_mode,
-                    )
-                else:
-                    logger.debug(f"####### EQUAL ##########")
-            else:
-                # 如果 config.toml 没有配置,使用硬编码的默认值作为后备
-                settings = Settings(
-                    llm_model='gpt-5-mini',
-                    llm_api_key=SecretStr(self.api_key),
-                    llm_base_url='https://comparegpt.io/api',
-                    agent='CodeActAgent',
-                )
-            await settings_store.store(settings)
-            logger.info(f"##### Settings updated for user {self.user_id}")
-
-        # Merge config.toml settings with stored settings
-        if settings:
-            settings = settings.merge_with_config_settings()
+        # 与全局配置合并
+        settings = settings.merge_with_config_settings()
 
         self._settings = settings
-        logger.debug(f"get_user_settings():  exit")
+        logger.debug("get_user_settings(): exit")
         return settings
+
+    async def _create_and_store_default_settings(self, store: SettingsStore) -> Settings:
+        """创建一个新的默认设置并保存。"""
+        logger.info(f"No existing settings for user {self.user_id}, creating defaults...")
+        config_settings = Settings.from_config()
+        if not config_settings:
+            raise HTTPException(status_code=500, detail="Server default configuration (config.toml) is missing or invalid.")
+
+        new_settings = Settings(
+            llm_model=config_settings.llm_model,
+            llm_api_key=SecretStr(self.api_key), # 使用来自 JWT 的 key
+            llm_base_url=config_settings.llm_base_url,
+            agent=config_settings.agent,
+            max_iterations=config_settings.max_iterations,
+        )
+        await store.store(new_settings)
+        logger.info(f"Default settings saved for user {self.user_id}")
+        return new_settings
+
+    async def _update_settings_with_new_key(self, store: SettingsStore, existing_settings: Settings) -> Settings:
+        """使用来自 JWT 的新 API Key 更新现有设置。"""
+        logger.info(f"API key for user {self.user_id} has changed, updating stored settings.")
+        config_settings = Settings.from_config()
+        if not config_settings:
+            raise HTTPException(status_code=500, detail="Server default configuration (config.toml) is missing or invalid.")
+
+        existing_settings.llm_api_key = SecretStr(self.api_key)
+        existing_settings.llm_base_url = config_settings.llm_base_url
+        await store.store(existing_settings)
+        logger.info(f"Settings updated with new API key for user {self.user_id}")
+        return existing_settings
+
 
     async def get_secrets_store(self):
         # logger.info(f"get_secrets_store(): FileSecretsStore(self.user_id)")
