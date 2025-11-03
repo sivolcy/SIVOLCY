@@ -29,8 +29,8 @@ export const DEFAULT_SETTINGS: Settings = {
     stdio_servers: [],
     shttp_servers: [],
   },
-  GIT_USER_NAME: "openhands",
-  GIT_USER_EMAIL: "openhands@all-hands.dev",
+  GIT_USER_NAME: "vibecoding",
+  GIT_USER_EMAIL: "vibecoding@comparegpt.io",
 };
 
 /**

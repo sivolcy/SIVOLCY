@@ -297,8 +297,8 @@ RUN \
     touch /openhands/code/openhands/__init__.py && \
     chown -R openhands:openhands /openhands/code && \
     # Set global git configuration to ensure proper author/committer information
-    git config --global user.name "openhands" && \
-    git config --global user.email "openhands@all-hands.dev"
+    git config --global user.name "vibecoding" && \
+    git config --global user.email "vibecoding@comparegpt.io"
 
 COPY --chown=openhands:openhands ./code/pyproject.toml ./code/poetry.lock /openhands/code/
 

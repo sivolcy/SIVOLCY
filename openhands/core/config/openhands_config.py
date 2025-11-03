@@ -121,10 +121,10 @@ class OpenHandsConfig(BaseModel):
     kubernetes: KubernetesConfig = Field(default_factory=KubernetesConfig)
     cli: CLIConfig = Field(default_factory=CLIConfig)
     git_user_name: str = Field(
-        default='openhands', description='Git user name for commits made by the agent'
+        default='vibecoding', description='Git user name for commits made by the agent'
     )
     git_user_email: str = Field(
-        default='openhands@all-hands.dev',
+        default='vibecoding@comparegpt.io',
         description='Git user email for commits made by the agent',
     )
 

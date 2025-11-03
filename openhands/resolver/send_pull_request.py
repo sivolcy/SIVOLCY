@@ -163,8 +163,8 @@ def make_commit(
     repo_dir: str,
     issue: Issue,
     issue_type: str,
-    git_user_name: str = 'openhands',
-    git_user_email: str = 'openhands@all-hands.dev',
+    git_user_name: str = 'vibecoding',
+    git_user_email: str = 'vibecoding@comparegpt.io',
 ) -> None:
     """Make a commit with the changes to the repository.
 
@@ -243,8 +243,8 @@ def send_pull_request(
     reviewer: str | None = None,
     pr_title: str | None = None,
     base_domain: str | None = None,
-    git_user_name: str = 'openhands',
-    git_user_email: str = 'openhands@all-hands.dev',
+    git_user_name: str = 'vibecoding',
+    git_user_email: str = 'vibecoding@comparegpt.io',
 ) -> str:
     """Send a pull request to a GitHub, GitLab, or Bitbucket repository.
 
@@ -513,8 +513,8 @@ def process_single_issue(
     reviewer: str | None = None,
     pr_title: str | None = None,
     base_domain: str | None = None,
-    git_user_name: str = 'openhands',
-    git_user_email: str = 'openhands@all-hands.dev',
+    git_user_name: str = 'vibecoding',
+    git_user_email: str = 'vibecoding@comparegpt.io',
 ) -> None:
     # Determine default base_domain based on platform
     if base_domain is None:
@@ -681,13 +681,13 @@ def main() -> None:
     parser.add_argument(
         '--git-user-name',
         type=str,
-        default='openhands',
+        default='vibecoding',
         help='Git user name for commits',
     )
     parser.add_argument(
         '--git-user-email',
         type=str,
-        default='openhands@all-hands.dev',
+        default='vibecoding@comparegpt.io',
         help='Git user email for commits',
     )
     my_args = parser.parse_args()
