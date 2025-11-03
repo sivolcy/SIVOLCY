@@ -121,12 +121,15 @@ class DockerRuntime(ActionExecutionClient):
         self._vscode_port_lock: PortLock | None = None
         self._app_port_locks: list[PortLock] = []
         if hasattr(config.extended, 'vscode_port_range') and config.extended.vscode_port_range is not None and config.extended.vscode_port_range != '':
+            global VSCODE_PORT_RANGE
             VSCODE_PORT_RANGE = ast.literal_eval(config.extended.vscode_port_range)
 
         if hasattr(config.extended, 'app_port_range_1') and config.extended.app_port_range_1 is not None and config.extended.app_port_range_1 != '':
+            global APP_PORT_RANGE_1
             APP_PORT_RANGE_1 = ast.literal_eval(config.extended.app_port_range_1)
 
         if hasattr(config.extended, 'app_port_range_2') and config.extended.app_port_range_2 is not None and config.extended.app_port_range_2 != '':
+            global APP_PORT_RANGE_2
             APP_PORT_RANGE_2 = ast.literal_eval(config.extended.app_port_range_2)
 
         if os.environ.get('DOCKER_HOST_ADDR'):
