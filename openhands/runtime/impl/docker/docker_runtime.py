@@ -1,3 +1,4 @@
+import ast
 import os
 import platform
 import typing
@@ -119,6 +120,14 @@ class DockerRuntime(ActionExecutionClient):
         self._host_port_lock: PortLock | None = None
         self._vscode_port_lock: PortLock | None = None
         self._app_port_locks: list[PortLock] = []
+        if hasattr(config.extended, 'vscode_port_range') and config.extended.vscode_port_range is not None and config.extended.vscode_port_range != '':
+            VSCODE_PORT_RANGE = ast.literal_eval(config.extended.vscode_port_range)
+
+        if hasattr(config.extended, 'app_port_range_1') and config.extended.app_port_range_1 is not None and config.extended.app_port_range_1 != '':
+            APP_PORT_RANGE_1 = ast.literal_eval(config.extended.app_port_range_1)
+
+        if hasattr(config.extended, 'app_port_range_2') and config.extended.app_port_range_2 is not None and config.extended.app_port_range_2 != '':
+            APP_PORT_RANGE_2 = ast.literal_eval(config.extended.app_port_range_2)
 
         if os.environ.get('DOCKER_HOST_ADDR'):
             logger.info(
@@ -579,8 +588,17 @@ class DockerRuntime(ActionExecutionClient):
     )
     def wait_until_alive(self) -> None:
         try:
+            # 添加容器状态检查
             container = self.docker_client.containers.get(self.container_name)
+            self.log('debug', f'Container status: {container.status}')
+
             if container.status == 'exited':
+                # 获取容器退出码和日志
+                exit_code = container.attrs['State']['ExitCode']
+                self.log('error', f'Container exited with code: {exit_code}')
+                # 输出最近的容器日志帮助诊断
+                logs = container.logs(tail=50).decode('utf-8')
+                self.log('error', f'Container logs: {logs}')
                 raise AgentRuntimeDisconnectedError(
                     f'Container {self.container_name} has exited.'
                 )
@@ -701,7 +719,12 @@ class DockerRuntime(ActionExecutionClient):
         if not token:
             return None
 
-        vscode_url = f'http://localhost:{self._vscode_port}/?tkn={token}&folder={self.config.workspace_mount_path_in_sandbox}'
+        if hasattr(self.config.extended, 'web_host_addr') and self.config.extended.web_host_addr:
+            host_addr = self.config.extended.web_host_addr
+        else:
+            host_addr = 'localhost'
+
+        vscode_url = f'http://{host_addr}:{self._vscode_port}/?tkn={token}&folder={self.config.workspace_mount_path_in_sandbox}'
         return vscode_url
 
     @property
