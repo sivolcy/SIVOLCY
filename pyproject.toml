@@ -197,6 +197,12 @@ rouge = "^1.0.1"
 python-levenshtein = ">=0.26.1,<0.28.0"
 tree-sitter-python = "^0.23.6"
 
+
+[[tool.poetry.source]]
+name = "tuna"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+priority = "primary"
+
 [tool.poetry-dynamic-versioning]
 enable = true
 style = "semver"

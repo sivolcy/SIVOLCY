@@ -17,6 +17,7 @@ class AuthMiddleware:
             '/assets/',  # 静态资源
             '/locales/',
             '/favicon.ico',
+            '/mcp/mcp',
             # '/api/check_auth',
             # '/mcp/sse',
             # '/mcp',
