@@ -148,7 +148,7 @@ class JwtUserAuth(UserAuth):
             #     settings.llm_base_url = config_settings.llm_base_url
 
             # 如果传入的 api_key 有更新，与个人存储的不一致，或者系统配置的llm_base_url与 个人存储base_url 不同，则更新个人存储。
-            if self.api_key != settings.llm_api_key  or  config_settings.llm_base_url != settings.llm_base_url:
+            if SecretStr(self.api_key) != settings.llm_api_key  or  config_settings.llm_base_url != settings.llm_base_url:
                 logger.info(f"##### Found existing settings for user {self.user_id}, updating api_key and llm_base_url ...")
                 logger.debug(f"####### NOT EQUAL ##########")
 

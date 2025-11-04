@@ -6,7 +6,6 @@ import { useSearchParams } from "react-router";
 // import { ModelSelector } from "#/components/shared/modals/settings/model-selector";
 import { useAIConfigOptions } from "#/hooks/query/use-ai-config-options";
 import { useSettings } from "#/hooks/query/use-settings";
-import { hasAdvancedSettingsSet } from "#/utils/has-advanced-settings-set";
 import { useSaveSettings } from "#/hooks/mutation/use-save-settings";
 import { SettingsSwitch } from "#/components/features/settings/settings-switch";
 import { TooltipButton } from "#/components/shared/buttons/tooltip-button";
@@ -39,11 +38,11 @@ import { cn } from "#/utils/utils";
 // 【修改1】新增: 定义默认模型和可选模型列表
 const DEFAULT_LLM_MODEL = "gpt-5-mini";
 const AVAILABLE_MODELS = [
-  "gpt-5",
   "gpt-5-mini",
-  "gpt-4.1",
-  "claude-opus-4",
-  "claude-3-5-haiku",
+  "gpt-5-codex",
+  "claude-haiku-4-5",
+  "claude-sonnet-4-5",
+  "grok-code-fast",
 ];
 
 // 【修改2】移除: OpenHandsApiKeyHelp 组件(如果存在)
@@ -133,29 +132,30 @@ function LlmSettingsScreen() {
   //   resources?.models || [],
   // );
 
-  React.useEffect(() => {
-    const determineWhetherToToggleAdvancedSettings = () => {
-      if (resources && settings) {
-        // 【修改5】简化: 只检查是否有高级设置,不再检查自定义模型
-        return hasAdvancedSettingsSet({
-          ...settings,
-        });
-        // return (
-        //   isCustomModel(resources.models, settings.LLM_MODEL) ||
-        //   hasAdvancedSettingsSet({
-        //     ...settings,
-        //   })
-        // );
-      }
-
-      return false;
-    };
-
-    const userSettingsIsAdvanced = determineWhetherToToggleAdvancedSettings();
-
-    if (userSettingsIsAdvanced) setView("advanced");
-    else setView("basic");
-  }, [settings, resources]);
+  // Force basic mode by default - comment out the advanced settings detection
+  // React.useEffect(() => {
+  //   const determineWhetherToToggleAdvancedSettings = () => {
+  //     if (resources && settings) {
+  //       // 【修改5】简化: 只检查是否有高级设置,不再检查自定义模型
+  //       return hasAdvancedSettingsSet({
+  //         ...settings,
+  //       });
+  //       // return (
+  //       //   isCustomModel(resources.models, settings.LLM_MODEL) ||
+  //       //   hasAdvancedSettingsSet({
+  //       //     ...settings,
+  //       //   })
+  //       // );
+  //     }
+  //
+  //     return false;
+  //   };
+  //
+  //   const userSettingsIsAdvanced = determineWhetherToToggleAdvancedSettings();
+  //
+  //   if (userSettingsIsAdvanced) setView("advanced");
+  //   else setView("basic");
+  // }, [settings, resources]);
 
   // Initialize currentSelectedModel with the current settings
   React.useEffect(() => {

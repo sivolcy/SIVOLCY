@@ -28,6 +28,11 @@ export const VERIFIED_MODELS = [
   "qwen3-coder-480b",
   "gpt-5-2025-08-07",
   "gpt-5-mini-2025-08-07",
+  "gpt-5-mini",
+  "gpt-5-codex",
+  "claude-haiku-4-5",
+  "claude-sonnet-4-5",
+  "grok-code-fast",
 ];
 
 // LiteLLM does not return OpenAI models with the provider, so we list them here to set them ourselves for consistency

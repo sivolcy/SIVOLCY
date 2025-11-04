@@ -90,4 +90,12 @@ def get_supported_llm_models(config: OpenHandsConfig) -> list[str]:
     ]
     model_list = clarifai_models + model_list
 
+    model_list = [
+        "gpt-5-mini",
+        "gpt-5-codex",
+        "claude-haiku-4-5",
+        "claude-sonnet-4-5",
+        "grok-code-fast",
+    ]
+
     return list(sorted(set(model_list)))
