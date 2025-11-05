@@ -142,7 +142,16 @@ class LLM(RetryMixin, DebugMixin):
             self.config.custom_llm_provider
             and self.config.custom_llm_provider.startswith('comparegpt')
         ):
-            self.config.custom_llm_provider = None
+            # self.config.custom_llm_provider = None
+            # if not self.config.base_url:
+            #     self.config.base_url = "https://comparegpt.io/api"
+            self.config.custom_llm_provider = "openai"
+            logger.debug(
+                'comparegpt custom provider detected; using model %s with base URL %s',
+                self.config.model,
+                self.config.base_url,
+            )
+
 
         features = get_features(self.config.model)
         if features.supports_reasoning_effort:
@@ -332,7 +341,8 @@ class LLM(RetryMixin, DebugMixin):
             start_time = time.time()
             # we don't support streaming here, thus we get a ModelResponse
 
-            logger.debug(f'##### args: {args},  kwargs: {kwargs}')
+            # print messages
+            # logger.debug(f'##### args: {args},  kwargs: {kwargs}')
             # Suppress httpx deprecation warnings during LiteLLM calls
             # This prevents the "Use 'content=<...>' to upload raw bytes/text content" warning
             # that appears when LiteLLM makes HTTP requests to LLM providers
@@ -824,9 +834,11 @@ class LLM(RetryMixin, DebugMixin):
         return str(self)
 
     def format_messages_for_llm(self, messages: Message | list[Message]) -> list[dict]:
-        logger.debug(
-            f'##### entry. type(messages)={type(messages)}, messages={messages}'
-        )
+        # print messages
+        # logger.debug(
+        #     f'##### entry. type(messages)={type(messages)}, messages={messages}'
+        # )
+        logger.debug(f'##### entry.')
         if isinstance(messages, Message):
             messages = [messages]
 
@@ -866,9 +878,10 @@ class LLM(RetryMixin, DebugMixin):
                     f'Unsupported message type {type(message)} encountered when formatting payload.'
                 )
 
-        logger.debug(
-            f'##### exit. type(formatted)={type(formatted)}, formatted={formatted}'
-        )
+        # logger.debug(
+        #     f'##### exit. type(formatted)={type(formatted)}, formatted={formatted}'
+        # )
+        logger.debug(f'##### exit.')
         return formatted
 
         # logger.debug(

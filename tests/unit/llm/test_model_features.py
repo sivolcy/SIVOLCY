@@ -290,6 +290,13 @@ def test_stop_words_grok_provider_prefixed():
     assert get_features('grok-code-fast-1').supports_stop_words is False
 
 
+def test_grok_code_fast_function_calling():
+    # Test that grok-code-fast variants now support function calling
+    assert get_features('grok-code-fast-1').supports_function_calling is True
+    assert get_features('xai/grok-code-fast-1').supports_function_calling is True
+    assert get_features('grok-code-fast').supports_function_calling is True
+
+
 @pytest.mark.parametrize(
     'model',
     [
