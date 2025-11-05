@@ -34,7 +34,7 @@ function PosthogInit() {
   React.useEffect(() => {
     if (posthogClientKey) {
       posthog.init(posthogClientKey, {
-        api_host: "https://us.i.posthog.com",
+        api_host: "https://",
         person_profiles: "identified_only",
       });
     }
@@ -44,16 +44,11 @@ function PosthogInit() {
 }
 
 async function prepareApp() {
-  if (
-    process.env.NODE_ENV === "development" &&
-    import.meta.env.VITE_MOCK_API === "true"
-  ) {
-    const { worker } = await import("./mocks/browser");
+  const { worker } = await import("./mocks/browser");
 
-    await worker.start({
-      onUnhandledRequest: "bypass",
-    });
-  }
+  await worker.start({
+    onUnhandledRequest: "bypass",
+  });
 }
 
 prepareApp().then(() =>
