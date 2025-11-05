@@ -6,7 +6,7 @@ from openhands.core.logger import openhands_logger as logger
 
 # Initialize PostHog
 posthog.api_key = os.environ.get('POSTHOG_CLIENT_KEY', 'phc_placeholder')
-posthog.host = os.environ.get('POSTHOG_HOST', 'https://us.i.posthog.com')
+posthog.host = os.environ.get('POSTHOG_HOST', 'http://localhost')
 
 # Log PostHog configuration with masked API key for security
 api_key = posthog.api_key
