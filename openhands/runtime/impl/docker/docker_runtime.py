@@ -734,7 +734,11 @@ class DockerRuntime(ActionExecutionClient):
     def web_hosts(self) -> dict[str, int]:
         hosts: dict[str, int] = {}
 
-        host_addr = os.environ.get('DOCKER_HOST_ADDR', 'localhost')
+        if hasattr(self.config.extended, 'web_host_addr') and self.config.extended.web_host_addr:
+            host_addr = self.config.extended.web_host_addr
+        else:
+            host_addr = os.environ.get('DOCKER_HOST_ADDR', 'localhost')
+
         for port in self._app_ports:
             hosts[f'http://{host_addr}:{port}'] = port
 
