@@ -34,7 +34,7 @@ function PosthogInit() {
   React.useEffect(() => {
     if (posthogClientKey) {
       posthog.init(posthogClientKey, {
-        api_host: "https://us.i.posthog.com",
+        api_host: "/assets/posthog/",
         person_profiles: "identified_only",
       });
     }

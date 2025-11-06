@@ -13,3 +13,6 @@ export const handleCaptureConsent = (consent: boolean) => {
     posthog.opt_out_capturing();
   }
 };
+
+// 默认选择退出跟踪
+posthog.opt_out_capturing();
