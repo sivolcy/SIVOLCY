@@ -414,23 +414,28 @@
 /* Small utility for elements using inline hex text colors */
 [class*="text-[#"] { color: inherit; }
 
-/* Force all UI text and icons to black (user requested) */
-:root { --global-ui-text-color: #000000; }
-
-/* Text */
-body, body * {
-  color: var(--global-ui-text-color) !important;
-  /* Preserve background-color and other properties */
-}
+/* Icon color override: set icons to blue */
+:root { --global-icon-color: #2563eb; }
 
 /* SVG icons and inline SVG paths */
 svg, svg * {
-  fill: var(--global-ui-text-color) !important;
-  stroke: var(--global-ui-text-color) !important;
-  color: var(--global-ui-text-color) !important;
+  fill: var(--global-icon-color) !important;
+  stroke: var(--global-icon-color) !important;
+  color: var(--global-icon-color) !important;
 }
 
 /* Ensure icon fonts and pseudo-elements follow the same color */
 .icon, .icons, i, .svg-icon {
-  color: var(--global-ui-text-color) !important;
+  color: var(--global-icon-color) !important;
+}
+
+/* Generated content boxes (agent/observation outputs) */
+[data-testid$="-message"] [class*="p-3"],
+.chat-interface [class*="p-3"],
+.mcp-observation-content .p-3,
+[class*="bg-gray-900"],
+[class*="bg-[#0d0f11]"],
+[class*="bg-[#1a1a1a]"] {
+  background-color: var(--color-tertiary-light) !important;
+  color: var(--color-content) !important;
 }
