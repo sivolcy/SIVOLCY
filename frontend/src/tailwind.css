@@ -415,7 +415,7 @@
 [class*="text-[#"] { color: inherit; }
 
 /* Global text and icon overrides */
-:root { --global-text-color: #000000; --global-icon-color: #990066; }
+:root { --global-text-color: #000000; --global-icon-color: #333333; }
 
 /* Apply black text everywhere */
 body, body * {
