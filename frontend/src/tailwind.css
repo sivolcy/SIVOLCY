@@ -17,11 +17,11 @@
   --color-base-secondary: #f8fafc;
   --color-danger: #ef4444;
   --color-success: #10b981;
-  --color-basic: #6b7280;
+  --color-basic: #000000; /* make basic text black */
   --color-tertiary: #e5e7eb;
   --color-tertiary-light: #f3f4f6;
-  --color-content: #0f172a;
-  --color-content-2: #111827;
+  --color-content: #000000; /* primary text color -> black */
+  --color-content-2: #000000; /* secondary content -> black */
 }
 
 .button-base {
@@ -414,19 +414,30 @@
 /* Small utility for elements using inline hex text colors */
 [class*="text-[#"] { color: inherit; }
 
-/* Icon color override: set icons to blue */
-:root { --global-icon-color: #2563eb; }
+/* Global text and icon overrides */
+:root { --global-text-color: #000000; --global-icon-color: #990066; }
+
+/* Apply black text everywhere */
+body, body * {
+  color: var(--global-text-color) !important;
+}
 
 /* SVG icons and inline SVG paths */
 svg, svg * {
   fill: var(--global-icon-color) !important;
   stroke: var(--global-icon-color) !important;
   color: var(--global-icon-color) !important;
+  box-shadow: none !important;
+  -webkit-filter: none !important;
+  filter: none !important;
 }
 
 /* Ensure icon fonts and pseudo-elements follow the same color */
 .icon, .icons, i, .svg-icon {
   color: var(--global-icon-color) !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+  filter: none !important;
 }
 
 /* Generated content boxes (agent/observation outputs) */
