@@ -11,17 +11,17 @@
 
 /* OLD TAILWIND STYLES */
 @theme {
-  --color-primary: #c9b974;
-  --color-logo: #cfb755;
-  --color-base: #0d0f11;
-  --color-base-secondary: #24272e;
-  --color-danger: #e76a5e;
-  --color-success: #a5e75e;
-  --color-basic: #9099ac;
-  --color-tertiary: #454545;
-  --color-tertiary-light: #b7bdc2;
-  --color-content: #ecedee;
-  --color-content-2: #f9fbfe;
+  --color-primary: #06b6d4; /* cyan-500 */
+  --color-logo: #0ea5b4;
+  --color-base: #ffffff;
+  --color-base-secondary: #f8fafc;
+  --color-danger: #ef4444;
+  --color-success: #10b981;
+  --color-basic: #6b7280;
+  --color-tertiary: #e5e7eb;
+  --color-tertiary-light: #f3f4f6;
+  --color-content: #0f172a;
+  --color-content-2: #111827;
 }
 
 .button-base {
@@ -350,3 +350,66 @@
 .api-configuration-modal {
   box-shadow: 0 183px 51px 0 rgba(0, 0, 0, 0.00), 0 117px 47px 0 rgba(0, 0, 0, 0.01), 0 66px 40px 0 rgba(0, 0, 0, 0.03), 0 29px 29px 0 rgba(0, 0, 0, 0.04), 0 7px 16px 0 rgba(0, 0, 0, 0.05);
 }
+
+/* Theme overrides to map existing dark-specific classes to the new Light Modern theme.
+   We use attribute selectors on class names to keep changes non-invasive and avoid
+   editing hundreds of files that reference hard-coded colors. */
+
+/* Text color replacements */
+[class*="text-white"] { color: var(--color-content) !important; }
+[class*="text-[#9099AC]"] { color: var(--color-basic) !important; }
+[class*="text-[#B1B9D3]"] { color: var(--color-basic) !important; }
+[class*="text-[#A7A7A7]"] { color: var(--color-basic) !important; }
+
+/* Background replacements for common dark backdrops */
+[class*="bg-[#26282D]"], [class*="bg-[#27272A]"], [class*="bg-[#25272D]"], [class*="bg-[#24272E]"], [class*="bg-[#2D2F36]"] {
+  background-color: var(--color-base-secondary) !important;
+}
+
+[class*="bg-[#454545]"], [class*="bg-[#3a3c45]"], [class*="bg-[#525252]"], [class*="bg-[#727987]"], [class*="bg-[#5C5D62]"] {
+  background-color: var(--color-tertiary) !important;
+  color: var(--color-content) !important;
+}
+
+/* Border replacements */
+[class*="border-[#525252]"], [class*="border-[#727987]"], [class*="border-[#717888]"], [class*="border-[#3c3c4a]"] {
+  border-color: var(--border) !important;
+}
+
+/* Semi-transparent white overlays -> subtle primary tint on light bg */
+[class*="bg-[#ffffff0d]"], [class*="bg-[#ffffff33]"], [class*="bg-[#ffffff1a]"] {
+  background-color: rgba(6, 182, 212, 0.04) !important; /* very subtle cyan */
+}
+
+/* Accent and primary colors */
+[class*="bg-[#C9B974]"], [class*="bg-[#c9b974]"] {
+  background-color: var(--color-primary) !important;
+  color: #000 !important;
+}
+
+/* Helper: ensure components relying on text-white get readable dark text on light backgrounds */
+[class*="text-white"][class*="bg-"], [class*="text-white"] {
+  color: var(--color-content) !important;
+}
+
+/* Inputs and disabled states */
+[class*="disabled:bg-[#2D2F36]"], [class*="disabled:bg-[#363636]"] {
+  background-color: var(--bg-input) !important;
+}
+
+/* Tooltips and popovers */
+[class*="bg-[#1a1a1a]"], [class*="bg-[#0D0F11]"] {
+  background-color: var(--color-content) ;
+  color: var(--color-base) !important;
+}
+
+/* Chat input & editor areas */
+.chat-input, .chat-input:focus {
+  color: var(--text-editor-active) !important;
+}
+
+/* Ensure links and primary buttons remain visible */
+[class*="bg-primary"] { background-color: var(--color-primary) !important; color: #000 !important; }
+
+/* Small utility for elements using inline hex text colors */
+[class*="text-[#"] { color: inherit; }
