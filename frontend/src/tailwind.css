@@ -413,3 +413,25 @@
 
 /* Small utility for elements using inline hex text colors */
 [class*="text-[#"] { color: inherit; }
+
+/* Force all UI text and icons to black (user requested) */
+:root { --global-ui-text-color: #000000; }
+
+/* Text */
+body, body * {
+  color: var(--global-ui-text-color) !important;
+  /* Preserve background-color and other properties */
+}
+
+/* SVG icons and inline SVG paths */
+svg, svg * {
+  fill: var(--global-ui-text-color) !important;
+  stroke: var(--global-ui-text-color) !important;
+  color: var(--global-ui-text-color) !important;
+}
+
+/* Ensure icon fonts and pseudo-elements follow the same color */
+.icon, .icons, i, .svg-icon {
+  color: var(--global-ui-text-color) !important;
+}
+
