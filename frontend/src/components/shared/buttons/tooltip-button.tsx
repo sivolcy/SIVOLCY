@@ -128,7 +128,7 @@ export function TooltipButton({
       content={tooltip}
       closeDelay={100}
       placement={placement}
-      className={tooltipClassName}
+      className={tooltipClassName ?? "bg-[#f3f4f6] text-[#111827]" }
       showArrow={showArrow}
     >
       {content}

@@ -58,3 +58,9 @@ class ObservationType(str, Enum):
 
     TASK_TRACKING = 'task_tracking'
     """Result of a task tracking operation"""
+
+    LOOP_DETECTION = 'loop_detection'
+    """Observation used to indicate the agent has entered loop-recovery
+    mode (e.g. when the agent detects it is repeating steps). This is
+    primarily used by CLI/TUI flows to surface loop-recovery state to the
+    user interface."""

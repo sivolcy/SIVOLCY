@@ -399,8 +399,8 @@
 
 /* Tooltips and popovers */
 [class*="bg-[#1a1a1a]"], [class*="bg-[#0D0F11]"] {
-  background-color: var(--color-content) ;
-  color: var(--color-base) !important;
+  background-color: var(--color-tertiary-light) !important;
+  color: var(--color-content) !important;
 }
 
 /* Chat input & editor areas */
@@ -434,4 +434,3 @@ svg, svg * {
 .icon, .icons, i, .svg-icon {
   color: var(--global-ui-text-color) !important;
 }
-
