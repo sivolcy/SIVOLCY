@@ -29,6 +29,7 @@ from openhands.server.routes.manage_conversations import (
     app as manage_conversation_api_router,
 )
 from openhands.server.routes.mcp import mcp_server
+from openhands.server.routes.posthog import add_posthog_endpoints
 from openhands.server.routes.public import app as public_api_router
 from openhands.server.routes.secrets import app as secrets_router
 from openhands.server.routes.security import app as security_api_router
@@ -100,3 +101,4 @@ if server_config.enable_v1:
     app.include_router(v1_router.router)
 app.include_router(trajectory_router)
 add_health_endpoints(app)
+add_posthog_endpoints(app)

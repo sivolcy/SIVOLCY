@@ -13,6 +13,7 @@ class AuthMiddleware:
         public_paths = [
             '/api/health',
             '/api/public',
+            '/api/posthog/',
             '/api/options/config',  # 前端需要在认证前获取配置
             '/assets/',  # 静态资源
             '/locales/',
