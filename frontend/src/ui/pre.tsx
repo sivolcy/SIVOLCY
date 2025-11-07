@@ -17,11 +17,13 @@ const preVariants = cva("whitespace-pre-wrap", {
     },
     background: {
       default: "",
-      dark: "bg-[#EFEFEF]",
+      // Use the app input background for attachments so they appear light/gray
+      dark: "bg-[var(--bg-input)]",
     },
     textColor: {
       default: "",
-      light: "text-gray-300",
+      // For light backgrounds use dark text
+      light: "text-[#0D0F11]",
     },
     padding: {
       default: "",

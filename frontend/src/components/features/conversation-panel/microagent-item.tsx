@@ -28,7 +28,7 @@ export function MicroagentItem({
           </Typography.Text>
         </div>
         <div className="flex items-center">
-          <Typography.Text className="px-2 py-1 text-xs rounded-full bg-gray-800 mr-2">
+          <Typography.Text className="px-2 py-1 text-xs rounded-full bg-[var(--bg-input)] mr-2 text-[#0D0F11]">
             {agent.type === "repo" ? "Repository" : "Knowledge"}
           </Typography.Text>
           <Typography.Text className="text-gray-300">
