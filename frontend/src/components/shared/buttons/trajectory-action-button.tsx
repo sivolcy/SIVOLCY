@@ -18,7 +18,7 @@ export function TrajectoryActionButton({
       type="button"
       data-testid={testId}
       onClick={onClick}
-      className="flex items-center justify-center w-[26px] h-[26px] rounded-lg cursor-pointer bg-[#A3A3A3] hover:bg-[#D9D9D9]"
+      className="flex items-center justify-center w-[26px] h-[26px] rounded-lg cursor-pointer bg-white hover:bg-[#D9D9D9]"
     >
       {icon}
     </button>
