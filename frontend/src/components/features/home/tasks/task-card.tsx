@@ -66,7 +66,7 @@ export function TaskCard({ task }: TaskCardProps) {
       type="button"
       data-testid="task-launch-button"
       className={cn(
-        "w-full p-[14px] text-left flex items-center justify-between cursor-pointer hover:bg-[#5C5D62] transition-all duration-300 rounded-lg",
+        "w-full p-[14px] text-left flex items-center justify-between cursor-pointer hover:bg-[var(--attachment-bg)] transition-all duration-300 rounded-lg",
         isCreatingConversation && "cursor-not-allowed",
       )}
       disabled={isCreatingConversation}

@@ -48,7 +48,7 @@ export function AccountSettingsContextMenu({
         <Link key={to} to={to} className="text-decoration-none">
           <ContextMenuListItem
             onClick={() => handleNavigationClick()}
-            className="flex items-center gap-2 p-2 hover:bg-[#5C5D62] rounded h-[30px]"
+            className="flex items-center gap-2 p-2 hover:bg-[var(--attachment-bg)] rounded h-[30px]"
           >
             {icon}
             <span className="text-white text-sm">{t(text)}</span>
@@ -60,7 +60,7 @@ export function AccountSettingsContextMenu({
 
       <ContextMenuListItem
         onClick={onLogout}
-        className="flex items-center gap-2 p-2 hover:bg-[#5C5D62] rounded h-[30px]"
+        className="flex items-center gap-2 p-2 hover:bg-[var(--attachment-bg)] rounded h-[30px]"
       >
         <LogOutIcon width={16} height={16} />
         <span className="text-white text-sm">

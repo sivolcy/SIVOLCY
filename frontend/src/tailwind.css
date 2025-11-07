@@ -362,11 +362,11 @@
 [class*="text-[#A7A7A7]"] { color: var(--color-basic) !important; }
 
 /* Background replacements for common dark backdrops */
-[class*="bg-[#26282D]"], [class*="bg-[#27272A]"], [class*="bg-[#25272D]"], [class*="bg-[#24272E]"], [class*="bg-[#2D2F36]"] {
+[class*="bg-[var(--attachment-bg)]"], [class*="bg-[var(--attachment-bg)]"], [class*="bg-[var(--attachment-bg)]"], [class*="bg-[var(--attachment-bg)]"], [class*="bg-[var(--attachment-bg)]"] {
   background-color: var(--color-base-secondary) !important;
 }
 
-[class*="bg-[#454545]"], [class*="bg-[#3a3c45]"], [class*="bg-[#525252]"], [class*="bg-[#727987]"], [class*="bg-[#5C5D62]"] {
+[class*="bg-[var(--attachment-bg)]"], [class*="bg-[var(--attachment-bg)]"], [class*="bg-[var(--attachment-bg)]"], [class*="bg-[var(--attachment-bg)]"], [class*="bg-[var(--attachment-bg)]"] {
   background-color: var(--color-tertiary) !important;
   color: var(--color-content) !important;
 }
@@ -393,12 +393,12 @@
 }
 
 /* Inputs and disabled states */
-[class*="disabled:bg-[#2D2F36]"], [class*="disabled:bg-[#363636]"] {
+[class*="disabled:bg-[var(--attachment-bg)]"], [class*="disabled:bg-[var(--attachment-bg)]"] {
   background-color: var(--bg-input) !important;
 }
 
 /* Tooltips and popovers */
-[class*="bg-[#1a1a1a]"], [class*="bg-[#0D0F11]"] {
+[class*="bg-[var(--attachment-bg)]"], [class*="bg-[var(--attachment-bg)]"] {
   background-color: var(--color-tertiary-light) !important;
   color: var(--color-content) !important;
 }
@@ -445,8 +445,8 @@ svg, svg * {
 .chat-interface [class*="p-3"],
 .mcp-observation-content .p-3,
 [class*="bg-gray-900"],
-[class*="bg-[#0d0f11]"],
-[class*="bg-[#1a1a1a]"] {
+[class*="bg-[var(--attachment-bg)]"],
+[class*="bg-[var(--attachment-bg)]"] {
   background-color: var(--color-tertiary-light) !important;
   color: var(--color-content) !important;
 }

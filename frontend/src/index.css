@@ -6,6 +6,7 @@
   --bg-light: #ffffff;
   --bg-secondary: #f7f8fb;
   --bg-input: #f3f4f6;
+  --attachment-bg: var(--bg-input);
   --bg-workspace: #f8fafc;
   --border: #e6e9ef;
   --text-editor-base: #6b7280;

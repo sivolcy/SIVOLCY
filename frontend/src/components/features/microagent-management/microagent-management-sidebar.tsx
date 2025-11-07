@@ -226,8 +226,8 @@ export function MicroagentManagementSidebar({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className={cn(
-              "bg-tertiary border border-[#717888] bg-[#454545] w-full rounded-sm p-2 placeholder:text-tertiary-alt",
-              "disabled:bg-[#2D2F36] disabled:border-[#2D2F36] disabled:cursor-not-allowed h-10 box-shadow-none outline-none",
+              "bg-tertiary border border-[#717888] bg-[var(--attachment-bg)] w-full rounded-sm p-2 placeholder:text-tertiary-alt",
+              "disabled:bg-[var(--attachment-bg)] disabled:border-[#2D2F36] disabled:cursor-not-allowed h-10 box-shadow-none outline-none",
               "pr-10", // Space for spinner
             )}
           />

@@ -144,8 +144,8 @@ export function MicroagentManagementUpsertMicroagentModal({
               placeholder={t(I18nKey.MICROAGENT_MANAGEMENT$DESCRIBE_WHAT_TO_DO)}
               rows={6}
               className={cn(
-                "bg-tertiary border border-[#717888] bg-[#454545] w-full rounded-sm p-2 placeholder:italic placeholder:text-tertiary-alt resize-none",
-                "disabled:bg-[#2D2F36] disabled:border-[#2D2F36] disabled:cursor-not-allowed",
+                "bg-tertiary border border-[#717888] bg-[var(--attachment-bg)] w-full rounded-sm p-2 placeholder:italic placeholder:text-tertiary-alt resize-none",
+                "disabled:bg-[var(--attachment-bg)] disabled:border-[#2D2F36] disabled:cursor-not-allowed",
               )}
             />
           </label>
