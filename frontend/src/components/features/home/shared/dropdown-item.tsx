@@ -34,7 +34,7 @@ export function DropdownItem<T>({
       "text-white focus:outline-none font-normal",
       {
         "bg-[#C9B974] text-black": isSelected,
-        "hover:bg-[#5C5D62]": !isSelected,
+        "hover:bg-[#EFEFEF]": !isSelected,
         "hover:bg-[#C9B974] hover:text-black": isSelected,
       },
       itemClassName,

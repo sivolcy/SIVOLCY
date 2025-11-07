@@ -15,7 +15,16 @@
   --border-editor-sidebar: #e6e9ef;
   background-color: var(--base) !important;
   --bg-neutral-muted: rgba(15,23,42,0.04);
+  /* Light theme color mappings used by tailwind overrides */
+  --color-base-secondary: var(--bg-input);
+  --color-tertiary: var(--bg-input);
+  --color-tertiary-light: #f7f7f7;
+  --color-content: #0D0F11;
+  --color-primary: var(--border); /* keep primary accent defaulting to border for now */
+  --global-text-color: #000000;
+  --global-icon-color: #333333;
 }
+
 
 body {
   margin: 0;
