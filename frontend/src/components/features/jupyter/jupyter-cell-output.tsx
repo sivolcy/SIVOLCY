@@ -13,7 +13,7 @@ interface JupyterCellOutputProps {
 export function JupyterCellOutput({ lines }: JupyterCellOutputProps) {
   const { t } = useTranslation();
   return (
-    <div className="rounded-lg bg-gray-800 dark:bg-gray-900 p-2 text-xs">
+    <div className="rounded-lg bg-[var(--bg-input)] p-2 text-xs">
       <div className="mb-1 text-gray-400">
         {t(I18nKey.JUPYTER$OUTPUT_LABEL)}
       </div>

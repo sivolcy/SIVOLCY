@@ -7,7 +7,7 @@ interface JupytrerCellInputProps {
 
 export function JupytrerCellInput({ code }: JupytrerCellInputProps) {
   return (
-    <div className="rounded-lg bg-gray-800 dark:bg-gray-900 p-2 text-xs">
+    <div className="rounded-lg bg-[var(--bg-input)] p-2 text-xs">
       <div className="mb-1 text-gray-400">EXECUTE</div>
       <pre
         className="scrollbar-custom scrollbar-thumb-gray-500 hover:scrollbar-thumb-gray-400 dark:scrollbar-thumb-white/10 dark:hover:scrollbar-thumb-white/20 overflow-auto px-5"
