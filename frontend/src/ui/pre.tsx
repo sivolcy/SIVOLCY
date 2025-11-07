@@ -17,7 +17,7 @@ const preVariants = cva("whitespace-pre-wrap", {
     },
     background: {
       default: "",
-      dark: "bg-[var(--bg-input)]",
+      dark: "bg-[#EFEFEF]",
     },
     textColor: {
       default: "",
